@@ -2,8 +2,6 @@ package com.qyang;
 
 import java.util.EnumSet;
 
-import com.qyang.RepeatDialogFragment.NoticeListener;
-
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TimePicker;
+
+import com.qyang.RepeatDialogFragment.NoticeListener;
 
 public class SettingsFragment extends Fragment {
 	private TimePicker timePicker;
@@ -48,15 +51,21 @@ public class SettingsFragment extends Fragment {
 			}
 		});
 
-		button = (Button) rootView.findViewById(R.id.btnSetRepeat);
-		button.setOnClickListener(new OnClickListener() {
+		ListView listSettings = (ListView) rootView
+				.findViewById(R.id.listSettingItem);
+		SettingsItemAdapter adapter = new SettingsItemAdapter(getActivity());
+		listSettings.setAdapter(adapter);
+
+		listSettings.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				RepeatDialogFragment repeatDialog = new RepeatDialogFragment();
 				repeatDialog.setRepeat(RepeatOption.val2Set(alarm.getRepeat()));
 				repeatDialog.setNoticeListener(new NoticeListener() {
 					@Override
-					public void onDialogPositiveClick(EnumSet<RepeatOption> repeats) {
+					public void onDialogPositiveClick(
+							EnumSet<RepeatOption> repeats) {
 						alarm.setRepeat(RepeatOption.set2Val(repeats));
 					}
 				});
@@ -68,9 +77,6 @@ public class SettingsFragment extends Fragment {
 		this.timePicker.setCurrentHour(alarm.getHour());
 		this.timePicker.setCurrentMinute(alarm.getMinute());
 
-		this.txtbxName = (EditText) rootView.findViewById(R.id.txtbxName);
-		this.txtbxName.setText(alarm.getName());
-
 		return rootView;
 	}
 
@@ -78,13 +84,13 @@ public class SettingsFragment extends Fragment {
 		@Override
 		public void onClick(View view) {
 			alarm.setName(txtbxName.getEditableText().toString());
-			
+
 			if (isUpdate) {
 				new DbHandler(getActivity()).updateAlarm(alarm);
 			} else { /* create new */
 				new DbHandler(getActivity()).addAlarm(alarm);
 			}
-			
+
 			AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());
 			ash.setAlarm(alarm.getHour(), alarm.getMinute());
 			getActivity().getFragmentManager().popBackStack();

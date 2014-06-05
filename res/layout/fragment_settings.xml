@@ -3,10 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.qyang.ListFragment" >
 
     <TimePicker
@@ -14,47 +10,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/lblName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/name" />
-
-    <EditText
-        android:id="@+id/txtbxName"
+    <ListView
+        android:id="@+id/listSettingItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/lblSound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sound" />
-
-    <TextView
-        android:id="@+id/lblSoundVal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <TextView
-        android:id="@+id/lblRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/repeat" />
-
-    <TextView
-        android:id="@+id/lblRepeatVal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-    <Button
-        android:id="@+id/btnSetRepeat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Set repeat" />
 
     <!-- style="@android:style/ButtonBar" -->
 

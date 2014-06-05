@@ -38,11 +38,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int roy_goodman=0x7f020002;
     }
     public static final class id {
-        public static final int action_add=0x7f090014;
-        public static final int btnCancel=0x7f090012;
-        public static final int btnDone=0x7f090013;
-        public static final int btnSetRepeat=0x7f090010;
-        public static final int buttonbar=0x7f090011;
+        public static final int action_add=0x7f090010;
+        public static final int btnCancel=0x7f09000d;
+        public static final int btnDone=0x7f09000e;
+        public static final int buttonbar=0x7f09000c;
         public static final int container=0x7f090000;
         public static final int dummy_button=0x7f090005;
         public static final int fullscreen_content=0x7f090001;
@@ -50,15 +49,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int imgShown=0x7f090003;
         public static final int lblCurrentTime=0x7f090002;
         public static final int lblName=0x7f090007;
-        public static final int lblRepeat=0x7f09000e;
-        public static final int lblRepeatVal=0x7f09000f;
-        public static final int lblSound=0x7f09000c;
-        public static final int lblSoundVal=0x7f09000d;
         public static final int lblTime=0x7f090006;
+        public static final int lblTitle=0x7f09000f;
         public static final int list=0x7f090009;
+        public static final int listSettingItem=0x7f09000b;
         public static final int timePicker=0x7f09000a;
         public static final int togActivate=0x7f090008;
-        public static final int txtbxName=0x7f09000b;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -66,6 +62,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int alarm_item=0x7f030002;
         public static final int fragment_list=0x7f030003;
         public static final int fragment_settings=0x7f030004;
+        public static final int settings_item=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f080000;
