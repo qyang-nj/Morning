@@ -38,7 +38,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int roy_goodman=0x7f020002;
     }
     public static final class id {
-        public static final int action_add=0x7f090010;
+        public static final int action_add=0x7f090011;
         public static final int btnCancel=0x7f09000d;
         public static final int btnDone=0x7f09000e;
         public static final int buttonbar=0x7f09000c;
@@ -47,6 +47,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int fullscreen_content=0x7f090001;
         public static final int fullscreen_content_controls=0x7f090004;
         public static final int imgShown=0x7f090003;
+        public static final int lblContent=0x7f090010;
         public static final int lblCurrentTime=0x7f090002;
         public static final int lblName=0x7f090007;
         public static final int lblTime=0x7f090006;
@@ -62,7 +63,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int alarm_item=0x7f030002;
         public static final int fragment_list=0x7f030003;
         public static final int fragment_settings=0x7f030004;
-        public static final int settings_item=0x7f030005;
+        public static final int settings_item_1text1edit=0x7f030005;
+        public static final int settings_item_2text=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f080000;

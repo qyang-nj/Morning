@@ -1,9 +1,6 @@
 package com.qyang;
 
-import java.util.EnumSet;
-
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +9,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
-import com.qyang.RepeatDialogFragment.NoticeListener;
-
 public class SettingsFragment extends Fragment {
 	private TimePicker timePicker;
-	private EditText txtbxName;
 	private AlarmEntity alarm = null;
 	private boolean isUpdate = false;
+	private SettingsItemAdapter adapter;
 
 	public void setDefaultAlarm(AlarmEntity alarm) {
 		this.alarm = alarm;
@@ -39,6 +33,7 @@ public class SettingsFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_settings, container,
 				false);
 
+		/* Buttons */
 		Button button = (Button) rootView.findViewById(R.id.btnDone);
 		button.setOnClickListener(new BtnDoneEvent());
 
@@ -46,33 +41,25 @@ public class SettingsFragment extends Fragment {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), TimeOutActivity.class);
-				getActivity().startActivity(intent);
+				getActivity().getFragmentManager().popBackStack();
 			}
 		});
 
+		/* Settings List */
 		ListView listSettings = (ListView) rootView
 				.findViewById(R.id.listSettingItem);
-		SettingsItemAdapter adapter = new SettingsItemAdapter(getActivity());
+		adapter = new SettingsItemAdapter(getActivity(), alarm);
 		listSettings.setAdapter(adapter);
 
 		listSettings.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				RepeatDialogFragment repeatDialog = new RepeatDialogFragment();
-				repeatDialog.setRepeat(RepeatOption.val2Set(alarm.getRepeat()));
-				repeatDialog.setNoticeListener(new NoticeListener() {
-					@Override
-					public void onDialogPositiveClick(
-							EnumSet<RepeatOption> repeats) {
-						alarm.setRepeat(RepeatOption.set2Val(repeats));
-					}
-				});
-				repeatDialog.show(getFragmentManager(), "repeat");
+				adapter.clickItem(parent, view, position, id);
 			}
 		});
 
+		/* Time picker */
 		this.timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
 		this.timePicker.setCurrentHour(alarm.getHour());
 		this.timePicker.setCurrentMinute(alarm.getMinute());
@@ -83,7 +70,9 @@ public class SettingsFragment extends Fragment {
 	class BtnDoneEvent implements OnClickListener {
 		@Override
 		public void onClick(View view) {
-			alarm.setName(txtbxName.getEditableText().toString());
+			alarm.setHour(timePicker.getCurrentHour());
+			alarm.setMinute(timePicker.getCurrentMinute());
+			adapter.Sync();
 
 			if (isUpdate) {
 				new DbHandler(getActivity()).updateAlarm(alarm);

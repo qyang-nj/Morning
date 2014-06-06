@@ -35,6 +35,10 @@ public enum RepeatOption {
 	}
 	
 	public static String set2String(EnumSet<RepeatOption> set) {
+		if (set.size() == 0) {
+			return "Once";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		for (RepeatOption ro : set) {
 			sb.append(ro.toString()).append(" ");

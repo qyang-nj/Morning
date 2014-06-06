@@ -12,5 +12,13 @@
         android:layout_marginBottom="2dp"
         android:textSize="20sp"
         android:typeface="monospace" />
+    
+    <EditText
+        android:id="@+id/lblContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:inputType="textShortMessage"
+        android:typeface="monospace" />
 
 </LinearLayout>
