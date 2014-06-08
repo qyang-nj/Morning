@@ -1,26 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.qyang.ListFragment" >
 
     <TimePicker
         android:id="@+id/timePicker"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scaleX="1.2"
+        android:scaleY="1.2" />
 
     <ListView
         android:id="@+id/listSettingItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timePicker" />
 
-    <!-- style="@android:style/ButtonBar" -->
-
-    <LinearLayout
+   <LinearLayout
         android:id="@+id/buttonbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
         <Button
@@ -30,8 +31,6 @@
             android:layout_weight="1"
             android:text="@android:string/cancel" />
 
-        <!-- style="?android:attr/buttonBarButtonStyle" -->
-
         <Button
             android:id="@+id/btnDone"
             android:layout_width="wrap_content"
@@ -39,5 +38,4 @@
             android:layout_weight="1"
             android:text="@string/done" />
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
