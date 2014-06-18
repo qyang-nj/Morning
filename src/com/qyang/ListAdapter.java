@@ -54,7 +54,7 @@ public class ListAdapter extends BaseAdapter {
 		//Switch onOff = (Switch) convertView.findViewById(R.id.togActivate);
 		//onOff.setChecked(alarm.isActivated());
 		if (alarm.isActivated()) {
-			convertView.setBackgroundColor(0xFFFFCC66);
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.main_color));
 		}
 		return convertView;
 	}
