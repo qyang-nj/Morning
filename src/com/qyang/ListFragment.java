@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ListView;
 
 public class ListFragment extends Fragment {
@@ -27,7 +28,7 @@ public class ListFragment extends Fragment {
 		List<AlarmEntity> alarms = new DbHandler(getActivity()).getAllAlarm();
 		ListAdapter adapter = new ListAdapter(getActivity(), alarms);
 
-		ListView listView = (ListView) rootView.findViewById(R.id.list);
+		GridView listView = (GridView) rootView.findViewById(R.id.grid);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

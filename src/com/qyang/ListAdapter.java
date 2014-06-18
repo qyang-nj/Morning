@@ -1,13 +1,13 @@
 package com.qyang;
 
 import java.util.List;
+import java.util.Random;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 
 public class ListAdapter extends BaseAdapter {
@@ -51,8 +51,11 @@ public class ListAdapter extends BaseAdapter {
 		TextView title = (TextView) convertView.findViewById(R.id.lblName);
 		title.setText(alarm.getName());
 
-		Switch onOff = (Switch) convertView.findViewById(R.id.togActivate);
-		onOff.setChecked(alarm.isActivated());
+		//Switch onOff = (Switch) convertView.findViewById(R.id.togActivate);
+		//onOff.setChecked(alarm.isActivated());
+		if (alarm.isActivated()) {
+			convertView.setBackgroundColor(0xFFFFCC66);
+		}
 		return convertView;
 	}
 }
