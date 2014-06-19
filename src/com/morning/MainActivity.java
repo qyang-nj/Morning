@@ -1,4 +1,6 @@
-package com.qyang;
+package com.morning;
+
+import com.qyang.R;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qyang.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.morning.ui.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/itemborder"
@@ -34,4 +34,4 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_more" />
 
-</com.qyang.SquareRelativeLayout>
+</com.morning.ui.SquareRelativeLayout>

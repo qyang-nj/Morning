@@ -1,7 +1,9 @@
-package com.qyang;
+package com.morning;
 
 import java.util.List;
 import java.util.Random;
+
+import com.qyang.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
