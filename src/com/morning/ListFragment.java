@@ -2,8 +2,6 @@ package com.morning;
 
 import java.util.List;
 
-import com.qyang.R;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.ListView;
 
 public class ListFragment extends Fragment {
 
@@ -36,12 +33,14 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				AlarmEntity alarm = (AlarmEntity)view.getTag();
-				
+				AlarmEntity alarm = (AlarmEntity) view.getTag();
+
 				if (alarm.isActivated()) {
-					view.setBackgroundDrawable(getResources().getDrawable(R.drawable.itemborder));
+					view.setBackgroundDrawable(getResources().getDrawable(
+							R.drawable.itemborder));
 				} else {
-					view.setBackgroundColor(getResources().getColor(R.color.main_color));
+					view.setBackgroundColor(getResources().getColor(
+							R.color.main_color));
 				}
 			}
 		});

@@ -2,8 +2,6 @@ package com.morning;
 
 import java.util.EnumSet;
 
-import com.qyang.R;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;

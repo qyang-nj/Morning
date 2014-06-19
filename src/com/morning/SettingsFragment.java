@@ -1,7 +1,5 @@
 package com.morning;
 
-import com.qyang.R;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;

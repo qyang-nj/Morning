@@ -15,8 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.qyang.R;
-
 public class ListAdapter extends BaseAdapter {
 	private List<AlarmEntity> alarms;
 	private Context context;

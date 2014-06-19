@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.qyang.R;
 import com.qyang.util.SystemUiHider;
 
 /**
