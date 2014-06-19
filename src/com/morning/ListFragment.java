@@ -36,15 +36,13 @@ public class ListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				AlarmEntity alarm = (AlarmEntity) view.getTag();
-
-				FragmentTransaction transaction = getFragmentManager()
-						.beginTransaction();
-				SettingsFragment fragment = new SettingsFragment();
-				fragment.setDefaultAlarm(alarm);
-				transaction.replace(R.id.container, fragment);
-				transaction.addToBackStack("Settings");
-				transaction.commit();
+				AlarmEntity alarm = (AlarmEntity)view.getTag();
+				
+				if (alarm.isActivated()) {
+					view.setBackgroundDrawable(getResources().getDrawable(R.drawable.itemborder));
+				} else {
+					view.setBackgroundColor(getResources().getColor(R.color.main_color));
+				}
 			}
 		});
 
