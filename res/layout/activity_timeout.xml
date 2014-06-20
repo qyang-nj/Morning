@@ -17,14 +17,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
             android:textSize="60sp"
-            android:gravity="center" />"
+            android:gravity="center" />
 
         <ImageView
             android:id="@+id/imgShown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="haha"
-            android:src="@drawable/roy_goodman" />
+            android:contentDescription="haha" />
     </LinearLayout>
 
 
