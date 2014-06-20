@@ -41,6 +41,7 @@ public class ListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		AlarmEntity alarm = alarms.get(position);
@@ -95,23 +96,22 @@ public class ListAdapter extends BaseAdapter {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
-										AlarmDbHandler h = new AlarmDbHandler(context);
+										AlarmDbHandler h = new AlarmDbHandler(
+												context);
 										h.delAlarm(alarms.get(position));
-										//notifyDataSetInvalidated();
 										notifyDataSetChanged();
 									}
 								});
 
-				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
-
-				// show it
 				alertDialog.show();
-
 			}
 		});
 
 		if (alarm.isActivated()) {
+			convertView.setBackgroundDrawable(context.getResources()
+					.getDrawable(R.drawable.itemborder));
+		} else {
 			convertView.setBackgroundColor(context.getResources().getColor(
 					R.color.main_color));
 		}

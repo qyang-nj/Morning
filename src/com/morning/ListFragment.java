@@ -27,7 +27,7 @@ public class ListFragment extends Fragment {
 				false);
 
 		List<AlarmEntity> alarms = new AlarmDbHandler(getActivity()).getAllAlarm();
-		ListAdapter adapter = new ListAdapter(getActivity(), alarms);
+		final ListAdapter adapter = new ListAdapter(getActivity(), alarms);
 
 		GridView listView = (GridView) rootView.findViewById(R.id.grid);
 		listView.setAdapter(adapter);
@@ -36,14 +36,9 @@ public class ListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				AlarmEntity alarm = (AlarmEntity) view.getTag();
-
-				if (alarm.isActivated()) {
-					view.setBackgroundDrawable(getResources().getDrawable(
-							R.drawable.itemborder));
-				} else {
-					view.setBackgroundColor(getResources().getColor(
-							R.color.main_color));
-				}
+				alarm.setActivated(!alarm.isActivated());
+				new AlarmDbHandler(getActivity()).updateAlarm(alarm);
+				adapter.notifyDataSetChanged();
 			}
 		});
 
