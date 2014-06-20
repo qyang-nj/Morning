@@ -1,10 +1,7 @@
 package com.morning.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import com.morning.AlarmEntity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,11 +19,9 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 	private static final String KEY_NAME = "name";
 	private static final String KEY_HOUR = "hour";
 	private static final String KEY_MINUTE = "minute";
-	private static final String KEY_SOUND = "sound";
+//	private static final String KEY_SOUND = "sound";
 	private static final String KEY_REPEAT = "repeat";
 	private static final String KEY_ACTIVATED = "activated";
-
-	private static List<AlarmEntity> allAlarms = null;
 
 	public AlarmDbHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,7 +42,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
-	public void addAlarm(AlarmEntity alarm) {
+	public int addAlarm(AlarmEntity alarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -57,18 +52,15 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 		values.put(KEY_REPEAT, alarm.getRepeat());
 		values.put(KEY_ACTIVATED, alarm.isActivated());
 
-		int id = (int)db.insert(TABLE_NAME, null, values);
-		alarm.setId(id);
+		int id = (int) db.insert(TABLE_NAME, null, values);
 		db.close();
-		
-		if (allAlarms != null) {
-			allAlarms.add(0, alarm);
-		}
+
+		return id;
 	}
 
 	public void updateAlarm(AlarmEntity alarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(KEY_NAME, alarm.getName());
 		values.put(KEY_HOUR, alarm.getHour());
@@ -90,37 +82,29 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 		db.delete(TABLE_NAME, KEY_ID + " = ?", new String[] { alarm.getId()
 				.toString() });
 		db.close();
-
-		if (allAlarms != null) {
-			allAlarms.remove(alarm);
-		}
 	}
 
 	public List<AlarmEntity> getAllAlarm() {
-		if (allAlarms == null) {
-			List<AlarmEntity> alarmList = new ArrayList<AlarmEntity>();
-			String selectQuery = "SELECT * FROM " + TABLE_NAME;
+		List<AlarmEntity> alarmList = new ArrayList<AlarmEntity>();
+		String selectQuery = "SELECT * FROM " + TABLE_NAME;
 
-			SQLiteDatabase db = this.getReadableDatabase();
-			Cursor cursor = db.rawQuery(selectQuery, null);
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
 
-			if (cursor.moveToFirst()) {
-				do {
-					int hour = cursor.getInt(2);
-					int minute = cursor.getInt(3);
-					AlarmEntity alarm = new AlarmEntity(hour, minute);
-					alarm.setId(cursor.getInt(0));
-					alarm.setName(cursor.getString(1));
-					alarm.setRepeat(cursor.getInt(4));
-					alarm.setActivated(cursor.getInt(5) != 0);
-					alarmList.add(alarm);
-				} while (cursor.moveToNext());
-			}
-
-			db.close();
-			Collections.reverse(alarmList);
-			allAlarms = alarmList;
+		if (cursor.moveToFirst()) {
+			do {
+				int hour = cursor.getInt(2);
+				int minute = cursor.getInt(3);
+				AlarmEntity alarm = new AlarmEntity(hour, minute);
+				alarm.setId(cursor.getInt(0));
+				alarm.setName(cursor.getString(1));
+				alarm.setRepeat(cursor.getInt(4));
+				alarm.setActivated(cursor.getInt(5) != 0);
+				alarmList.add(alarm);
+			} while (cursor.moveToNext());
 		}
-		return allAlarms;
+
+		db.close();
+		return alarmList;
 	}
 }

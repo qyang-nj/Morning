@@ -3,6 +3,8 @@ package com.morning;
 import java.util.List;
 
 import com.morning.data.AlarmDbHandler;
+import com.morning.data.AlarmEntity;
+import com.morning.data.AlarmEntityManager;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -26,7 +28,7 @@ public class ListFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
 
-		List<AlarmEntity> alarms = new AlarmDbHandler(getActivity()).getAllAlarm();
+		List<AlarmEntity> alarms = AlarmEntityManager.getInstance().getAllAlarms();
 		final ListAdapter adapter = new ListAdapter(getActivity(), alarms);
 
 		GridView listView = (GridView) rootView.findViewById(R.id.grid);
@@ -37,7 +39,7 @@ public class ListFragment extends Fragment {
 					int position, long id) {
 				AlarmEntity alarm = (AlarmEntity) view.getTag();
 				alarm.setActivated(!alarm.isActivated());
-				new AlarmDbHandler(getActivity()).updateAlarm(alarm);
+				AlarmEntityManager.getInstance().updateAlarm(alarm);
 				adapter.notifyDataSetChanged();
 			}
 		});

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.morning.RepeatDialogFragment.NoticeListener;
+import com.morning.data.AlarmEntity;
 
 public class SettingsItemAdapter extends BaseAdapter {
 

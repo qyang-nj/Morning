@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import com.morning.data.AlarmEntityManager;
 import com.morning.ui.TypefaceSpan;
 
 public class MainActivity extends Activity {
@@ -27,5 +28,7 @@ public class MainActivity extends Activity {
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle(s);
+		
+		AlarmEntityManager.init(this);
 	}
 }

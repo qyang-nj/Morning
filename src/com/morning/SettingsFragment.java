@@ -1,7 +1,5 @@
 package com.morning;
 
-import com.morning.data.AlarmDbHandler;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +11,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TimePicker;
+
+import com.morning.data.AlarmEntity;
+import com.morning.data.AlarmEntityManager;
 
 public class SettingsFragment extends Fragment {
 	private TimePicker timePicker;
@@ -77,9 +78,9 @@ public class SettingsFragment extends Fragment {
 			adapter.Sync();
 
 			if (isUpdate) {
-				new AlarmDbHandler(getActivity()).updateAlarm(alarm);
+				AlarmEntityManager.getInstance().updateAlarm(alarm);
 			} else { /* create new */
-				new AlarmDbHandler(getActivity()).addAlarm(alarm);
+				AlarmEntityManager.getInstance().addAlarm(alarm);
 			}
 
 			AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());

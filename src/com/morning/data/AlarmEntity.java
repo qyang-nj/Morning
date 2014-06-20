@@ -1,10 +1,10 @@
-package com.morning;
+package com.morning.data;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class AlarmEntity {
-
+public class AlarmEntity implements Comparable<AlarmEntity> {
+	
 	public AlarmEntity() {
 		Calendar cal = Calendar.getInstance();
 		this.hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -94,6 +94,11 @@ public class AlarmEntity {
 				cal.getTime());
 		return str;
 	}
+	
+	@Override
+	public int compareTo(AlarmEntity another) {
+		return Long.valueOf(createTime).compareTo(another.getCreateTime());
+	}
 
 	private Integer id = null; /* If not in db, this should be null. */
 	private int hour;
@@ -103,4 +108,5 @@ public class AlarmEntity {
 	private int repeat = 0;
 	private long createTime;
 	private boolean activated = true;
+
 }

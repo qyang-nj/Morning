@@ -3,6 +3,8 @@ package com.morning;
 import java.util.List;
 
 import com.morning.data.AlarmDbHandler;
+import com.morning.data.AlarmEntity;
+import com.morning.data.AlarmEntityManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -96,9 +98,7 @@ public class ListAdapter extends BaseAdapter {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
-										AlarmDbHandler h = new AlarmDbHandler(
-												context);
-										h.delAlarm(alarms.get(position));
+										AlarmEntityManager.getInstance().delAlarm(alarms.get(position));
 										notifyDataSetChanged();
 									}
 								});
