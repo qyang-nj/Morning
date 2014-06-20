@@ -2,6 +2,8 @@ package com.morning;
 
 import java.util.List;
 
+import com.morning.data.AlarmDbHandler;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -24,7 +26,7 @@ public class ListFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
 
-		List<AlarmEntity> alarms = new DbHandler(getActivity()).getAllAlarm();
+		List<AlarmEntity> alarms = new AlarmDbHandler(getActivity()).getAllAlarm();
 		ListAdapter adapter = new ListAdapter(getActivity(), alarms);
 
 		GridView listView = (GridView) rootView.findViewById(R.id.grid);

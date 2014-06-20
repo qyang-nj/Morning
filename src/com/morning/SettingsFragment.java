@@ -1,5 +1,7 @@
 package com.morning;
 
+import com.morning.data.AlarmDbHandler;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -75,9 +77,9 @@ public class SettingsFragment extends Fragment {
 			adapter.Sync();
 
 			if (isUpdate) {
-				new DbHandler(getActivity()).updateAlarm(alarm);
+				new AlarmDbHandler(getActivity()).updateAlarm(alarm);
 			} else { /* create new */
-				new DbHandler(getActivity()).addAlarm(alarm);
+				new AlarmDbHandler(getActivity()).addAlarm(alarm);
 			}
 
 			AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());

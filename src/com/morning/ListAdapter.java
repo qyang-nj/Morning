@@ -2,6 +2,8 @@ package com.morning;
 
 import java.util.List;
 
+import com.morning.data.AlarmDbHandler;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -74,8 +76,9 @@ public class ListAdapter extends BaseAdapter {
 										if (!(context instanceof Activity)) {
 											return;
 										}
-										
-										AlarmEntity alarm = alarms.get(position);
+
+										AlarmEntity alarm = alarms
+												.get(position);
 
 										FragmentTransaction transaction = ((Activity) context)
 												.getFragmentManager()
@@ -92,8 +95,10 @@ public class ListAdapter extends BaseAdapter {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
-										// if this button is clicked, just close
-										// the dialog box and do nothing
+										AlarmDbHandler h = new AlarmDbHandler(context);
+										h.delAlarm(alarms.get(position));
+										//notifyDataSetInvalidated();
+										notifyDataSetChanged();
 									}
 								});
 

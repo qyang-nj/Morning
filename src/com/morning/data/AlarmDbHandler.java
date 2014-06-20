@@ -1,8 +1,10 @@
-package com.morning;
+package com.morning.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.morning.AlarmEntity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DbHandler extends SQLiteOpenHelper {
+public class AlarmDbHandler extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 3; /* Only increase */
 	private static final String DATABASE_NAME = "alarm_app";
 	private static final String TABLE_NAME = "alarms";
@@ -23,7 +25,9 @@ public class DbHandler extends SQLiteOpenHelper {
 	private static final String KEY_SOUND = "sound";
 	private static final String KEY_REPEAT = "repeat";
 
-	public DbHandler(Context context) {
+	private static List<AlarmEntity> allAlarms = null;
+
+	public AlarmDbHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -78,29 +82,36 @@ public class DbHandler extends SQLiteOpenHelper {
 		db.delete(TABLE_NAME, KEY_ID + " = ?", new String[] { alarm.getId()
 				.toString() });
 		db.close();
+
+		if (allAlarms != null) {
+			allAlarms.remove(alarm);
+		}
 	}
 
 	public List<AlarmEntity> getAllAlarm() {
-		List<AlarmEntity> alarmList = new ArrayList<AlarmEntity>();
-		String selectQuery = "SELECT * FROM " + TABLE_NAME;
+		if (allAlarms == null) {
+			List<AlarmEntity> alarmList = new ArrayList<AlarmEntity>();
+			String selectQuery = "SELECT * FROM " + TABLE_NAME;
 
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+			SQLiteDatabase db = this.getReadableDatabase();
+			Cursor cursor = db.rawQuery(selectQuery, null);
 
-		if (cursor.moveToFirst()) {
-			do {
-				int hour = cursor.getInt(2);
-				int minute = cursor.getInt(3);
-				AlarmEntity alarm = new AlarmEntity(hour, minute);
-				alarm.setId(cursor.getInt(0));
-				alarm.setName(cursor.getString(1));
-				alarm.setRepeat(cursor.getInt(4));
-				alarmList.add(alarm);
-			} while (cursor.moveToNext());
+			if (cursor.moveToFirst()) {
+				do {
+					int hour = cursor.getInt(2);
+					int minute = cursor.getInt(3);
+					AlarmEntity alarm = new AlarmEntity(hour, minute);
+					alarm.setId(cursor.getInt(0));
+					alarm.setName(cursor.getString(1));
+					alarm.setRepeat(cursor.getInt(4));
+					alarmList.add(alarm);
+				} while (cursor.moveToNext());
+			}
+
+			db.close();
+			Collections.reverse(alarmList);
+			allAlarms = alarmList;
 		}
-
-		db.close();
-		Collections.reverse(alarmList);
-		return alarmList;
+		return allAlarms;
 	}
 }
