@@ -4,6 +4,9 @@ import java.util.Calendar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +23,7 @@ import com.qyang.util.SystemUiHider;
  * 
  * @see SystemUiHider
  */
-public class TimeOutActivity extends Activity {
+public class AlertActivity extends Activity {
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -48,12 +51,14 @@ public class TimeOutActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+	
+	private Ringtone ringtone = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_timeout);
+		setContentView(R.layout.activity_alert);
 		getActionBar().hide();
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
@@ -124,6 +129,11 @@ public class TimeOutActivity extends Activity {
 		// while interacting with the UI.
 		findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);
+		
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		Ringtone r = RingtoneManager.getRingtone(this, alert);
+		r.play();
+		ringtone = r;
 	}
 
 	@Override
@@ -146,6 +156,10 @@ public class TimeOutActivity extends Activity {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (AUTO_HIDE) {
 				delayedHide(AUTO_HIDE_DELAY_MILLIS);
+			}
+			
+			if (ringtone != null) {
+				ringtone.stop();
 			}
 			return false;
 		}
