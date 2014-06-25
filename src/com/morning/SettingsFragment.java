@@ -14,6 +14,7 @@ import android.widget.TimePicker;
 
 import com.morning.data.AlarmEntity;
 import com.morning.data.AlarmEntityManager;
+import com.morning.data.ImageManager;
 
 public class SettingsFragment extends Fragment {
 	private TimePicker timePicker;
@@ -86,6 +87,8 @@ public class SettingsFragment extends Fragment {
 			AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());
 			ash.setAlarm(alarm.getHour(), alarm.getMinute());
 			getActivity().getFragmentManager().popBackStack();
+			
+			ImageManager.downloadImage(getActivity());
 		}
 	}
 }

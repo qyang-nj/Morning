@@ -13,8 +13,10 @@ import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.morning.data.ImageManager;
 import com.qyang.util.SystemUiHider;
 
 /**
@@ -66,6 +68,9 @@ public class AlertActivity extends Activity {
 		TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
 		Calendar cal = Calendar.getInstance();
 		lblCurrentTime.setText(DateFormat.format("hh:mm ", cal.getTime()));
+		
+		ImageView imgShown = (ImageView) findViewById(R.id.imgShown);
+		imgShown.setImageBitmap(ImageManager.getRandomImage());
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.

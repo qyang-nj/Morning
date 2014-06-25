@@ -2,10 +2,6 @@ package com.morning;
 
 import java.util.List;
 
-import com.morning.data.AlarmDbHandler;
-import com.morning.data.AlarmEntity;
-import com.morning.data.AlarmEntityManager;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -19,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+
+import com.morning.data.AlarmEntity;
+import com.morning.data.AlarmEntityManager;
 
 public class ListFragment extends Fragment {
 

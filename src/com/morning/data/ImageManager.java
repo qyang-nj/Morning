@@ -1,22 +1,82 @@
 package com.morning.data;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.morning.Strings;
+import com.morning.network.NetworkHelper;
+import com.morning.network.NetworkHelper.ResponseHandler;
 
 public class ImageManager {
-	
-	private ImageManager() {
-		
+
+	public static Bitmap getRandomImage() {
+		if (image == null) {
+			/* Empty Bitmap */
+			ImageManager.image = Bitmap.createBitmap(0, 0, Config.ARGB_8888);
+		}
+		return ImageManager.image;
 	}
-	
-	private String getImageUrl() {
-		return "";
+
+	public static void downloadImage(final Context context) {
+
+		ConnectivityManager connMgr = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (!(networkInfo != null && networkInfo.isConnected())) {
+			/* Network is NOT connected. */
+			loadDefaultImage(context);
+			return;
+		}
+
+		/* Network is connected. */
+		NetworkHelper.get(Strings.URL_GET_IMAGE, new ResponseHandler() {
+			@Override
+			public void response(byte[] bytes) {
+				String res = new String(bytes);
+				try {
+
+					final String url = new JSONObject(res).getString("url");
+
+					NetworkHelper.get(url, new ResponseHandler() {
+						@Override
+						public void response(byte[] bytes) {
+							Bitmap img = BitmapFactory.decodeByteArray(bytes,
+									0, bytes.length);
+							// new ImageDbHandler(context).addImage(url, img);
+							ImageManager.image = img;
+						}
+					});
+
+				} catch (JSONException e) {
+					Log.e(Strings.TAG, e.getMessage());
+					loadDefaultImage(context);
+				}
+			}
+		});
 	}
-	
-	private Bitmap downloadImage() {
-		return null;
+
+	private static void loadDefaultImage(Context context) {
+		InputStream is;
+		try {
+			is = context.getAssets().open("images/roy_goodman.png");
+			ImageManager.image = BitmapFactory.decodeStream(is);
+		} catch (IOException e) {
+			Log.e(Strings.TAG, e.getMessage());
+			/* Empty Bitmap */
+			ImageManager.image = Bitmap.createBitmap(0, 0, Config.ARGB_8888);
+		}
 	}
-	
-	public Bitmap getImage() {
-		return null;
-	}
+
+	private static Bitmap image = null;
 }
