@@ -109,11 +109,11 @@ public class ListAdapter extends BaseAdapter {
 		});
 
 		if (alarm.isActivated()) {
-			convertView.setBackgroundDrawable(context.getResources()
-					.getDrawable(R.drawable.itemborder));
-		} else {
 			convertView.setBackgroundColor(context.getResources().getColor(
 					R.color.main_color));
+		} else {
+			convertView.setBackgroundDrawable(context.getResources()
+					.getDrawable(R.drawable.itemborder));
 		}
 		return convertView;
 	}

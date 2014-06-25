@@ -1,6 +1,5 @@
 package com.morning.data;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -13,7 +12,7 @@ public class AlarmEntityManager {
 	private AlarmEntityManager(Context context) {
 		db = new AlarmDbHandler(context);
 		allAlarms = db.getAllAlarm();
-		Collections.sort(allAlarms);
+		//Collections.sort(allAlarms);
 	}
 	
 	public static void init(Context context) {

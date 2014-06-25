@@ -72,6 +72,10 @@ public class AlarmEntity implements Comparable<AlarmEntity> {
 	public int getRepeat() {
 		return repeat;
 	}
+	
+	public void setCreateTime(long time) {
+		this.createTime = time;
+	}
 
 	public long getCreateTime() {
 		return createTime;
