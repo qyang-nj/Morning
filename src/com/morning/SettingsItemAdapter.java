@@ -5,6 +5,10 @@ import java.util.EnumSet;
 import java.util.List;
 
 import android.app.Activity;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -15,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.morning.MainActivity.Callback;
 import com.morning.RepeatDialogFragment.NoticeListener;
 import com.morning.data.AlarmEntity;
 
@@ -45,15 +50,38 @@ public class SettingsItemAdapter extends BaseAdapter {
 
 		/* NAME */
 		Item itName = new Item();
-		itName.title = "NAME";
+		itName.title = context.getResources().getString(R.string.name);
 		itName.content = alarm.getName();
 		itName.layoutIndex = 0;
 
-		/* SOUND */
-		Item itSound = new Item();
-		itSound.title = "SOUND";
-		itSound.content = alarm.getSound();
-		itSound.layoutIndex = 1;
+		/* RINGTONE */
+		Item itRingtone = new Item();
+		itRingtone.title = "SOUND";
+		Uri u = alarm.getRingtone() == null ? null : Uri.parse(alarm.getRingtone());
+		itRingtone.content = u == null ? "" : RingtoneManager.getRingtone(context, u).getTitle(context);
+		itRingtone.layoutIndex = 1;
+		itRingtone.click = new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, final View view,
+					int position, long id) {
+				if (!(context instanceof MainActivity)) {
+					return;
+				}
+				MainActivity activity = (MainActivity) context;
+				activity.selectRingtone(new Callback() {
+					@Override
+					public void callback(Object... objects) {
+						Uri uri = (Uri) objects[0];
+						alarm.setRingtone(uri.toString());
+
+						Ringtone rt = RingtoneManager.getRingtone(context, uri);
+						TextView tv = (TextView) view
+								.findViewById(R.id.lblContent);
+						tv.setText(rt.getTitle(context));
+					}
+				});
+			}
+		};
 
 		/* REPEAT */
 		Item itRepeat = new Item();
@@ -82,7 +110,7 @@ public class SettingsItemAdapter extends BaseAdapter {
 			}
 		};
 
-		this.items = Arrays.asList(itName, itSound, itRepeat);
+		this.items = Arrays.asList(itName, itRingtone, itRepeat);
 	}
 
 	public void clickItem(AdapterView<?> parent, View view, int position,
@@ -121,12 +149,12 @@ public class SettingsItemAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(context);
 			convertView = inflater.inflate(layouts[item.layoutIndex], null);
-			
+
 			holder.txtTitle = (TextView) convertView
 					.findViewById(R.id.lblTitle);
 			holder.txtContent = (TextView) convertView
 					.findViewById(R.id.lblContent);
-			
+
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -134,15 +162,17 @@ public class SettingsItemAdapter extends BaseAdapter {
 
 		holder.txtTitle.setText(item.title);
 		holder.txtContent.setText(item.content);
-		
+
 		if (holder.txtContent instanceof EditText) {
-			holder.txtContent.setOnFocusChangeListener(new OnFocusChangeListener() {
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus){
-                        item.content = ((EditText) v).getText().toString();
-                    }
-                }
-            });
+			holder.txtContent
+					.setOnFocusChangeListener(new OnFocusChangeListener() {
+						public void onFocusChange(View v, boolean hasFocus) {
+							if (!hasFocus) {
+								item.content = ((EditText) v).getText()
+										.toString();
+							}
+						}
+					});
 		}
 
 		return convertView;

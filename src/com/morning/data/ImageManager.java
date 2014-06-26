@@ -14,7 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.morning.Strings;
+import com.morning.Constants;
 import com.morning.network.NetworkHelper;
 import com.morning.network.NetworkHelper.ResponseHandler;
 
@@ -40,7 +40,7 @@ public class ImageManager {
 		}
 
 		/* Network is connected. */
-		NetworkHelper.get(Strings.URL_GET_IMAGE, new ResponseHandler() {
+		NetworkHelper.get(Constants.URL_GET_IMAGE, new ResponseHandler() {
 			@Override
 			public void response(byte[] bytes) {
 				String res = new String(bytes);
@@ -59,7 +59,7 @@ public class ImageManager {
 					});
 
 				} catch (JSONException e) {
-					Log.e(Strings.TAG, e.getMessage());
+					Log.e(Constants.TAG, e.getMessage());
 					loadDefaultImage(context);
 				}
 			}
@@ -72,7 +72,7 @@ public class ImageManager {
 			is = context.getAssets().open("images/roy_goodman.png");
 			ImageManager.image = BitmapFactory.decodeStream(is);
 		} catch (IOException e) {
-			Log.e(Strings.TAG, e.getMessage());
+			Log.e(Constants.TAG, e.getMessage());
 			/* Empty Bitmap */
 			ImageManager.image = Bitmap.createBitmap(0, 0, Config.ARGB_8888);
 		}

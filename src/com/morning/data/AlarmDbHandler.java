@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class AlarmDbHandler extends SQLiteOpenHelper {
-	private static final int DATABASE_VERSION = 5; /* Only increase */
+	private static final int DATABASE_VERSION = 6; /* Only increase */
 	private static final String DATABASE_NAME = "alarm_app";
 	private static final String TABLE_NAME = "alarms";
 
@@ -19,7 +19,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 	private static final String KEY_NAME = "name";
 	private static final String KEY_HOUR = "hour";
 	private static final String KEY_MINUTE = "minute";
-	// private static final String KEY_SOUND = "sound";
+	private static final String KEY_RINGTONE = "ringtone";
 	private static final String KEY_REPEAT = "repeat";
 	private static final String KEY_ACTIVATED = "activated";
 	private static final String KEY_CTIME = "ctime";
@@ -31,9 +31,9 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String sql_create_table = String
-				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER)",
+				.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s TEXT)",
 						TABLE_NAME, KEY_ID, KEY_NAME, KEY_HOUR, KEY_MINUTE,
-						KEY_REPEAT, KEY_ACTIVATED, KEY_CTIME);
+						KEY_REPEAT, KEY_ACTIVATED, KEY_CTIME, KEY_RINGTONE);
 		db.execSQL(sql_create_table);
 	}
 
@@ -53,6 +53,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 		values.put(KEY_REPEAT, alarm.getRepeat());
 		values.put(KEY_ACTIVATED, alarm.isActivated());
 		values.put(KEY_CTIME, alarm.getCreateTime());
+		values.put(KEY_RINGTONE, alarm.getRingtone());
 
 		int id = (int) db.insert(TABLE_NAME, null, values);
 		db.close();
@@ -70,6 +71,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 		values.put(KEY_REPEAT, alarm.getRepeat());
 		values.put(KEY_ACTIVATED, alarm.isActivated());
 		values.put(KEY_CTIME, alarm.getCreateTime());
+		values.put(KEY_RINGTONE, alarm.getRingtone());
 
 		db.update(TABLE_NAME, values, KEY_ID + " = ?", new String[] { alarm
 				.getId().toString() });
@@ -89,7 +91,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 
 	public List<AlarmEntity> getAllAlarm() {
 		List<AlarmEntity> alarmList = new ArrayList<AlarmEntity>();
-		//String selectQuery = "SELECT * FROM " + TABLE_NAME;
+		// String selectQuery = "SELECT * FROM " + TABLE_NAME;
 		String selectQuery = String.format("SELECT * FROM %s ORDER BY %s DESC",
 				TABLE_NAME, KEY_CTIME);
 
@@ -106,6 +108,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 				alarm.setRepeat(cursor.getInt(4));
 				alarm.setActivated(cursor.getInt(5) > 0);
 				alarm.setCreateTime(cursor.getLong(6));
+				alarm.setRingtone(cursor.getString(7));
 				alarmList.add(alarm);
 			} while (cursor.moveToNext());
 		}

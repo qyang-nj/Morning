@@ -57,12 +57,12 @@ public class AlarmEntity implements Comparable<AlarmEntity> {
 		return name;
 	}
 
-	public void setSound(String sound) {
-		this.sound = sound;
+	public void setRingtone(String sound) {
+		this.ringtone = sound;
 	}
 
-	public String getSound() {
-		return sound;
+	public String getRingtone() {
+		return ringtone;
 	}
 
 	public void setRepeat(int repeat) {
@@ -108,7 +108,7 @@ public class AlarmEntity implements Comparable<AlarmEntity> {
 	private int hour;
 	private int minute;
 	private String name = "";
-	private String sound;
+	private String ringtone;
 	private int repeat = 0;
 	private long createTime;
 	private boolean activated = true;
