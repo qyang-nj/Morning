@@ -11,6 +11,8 @@
     <string name="repeat">REPEAT</string>
     <string name="title_activity_time_out">TimeOutActivity</string>
     <string name="ringtones">Ringtones</string>
+    <string name="snooze">Snooze</string>
+    <string name="off">Off</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 

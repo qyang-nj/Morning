@@ -23,7 +23,7 @@ public class ImageManager {
 	public static Bitmap getRandomImage() {
 		if (image == null) {
 			/* Empty Bitmap */
-			ImageManager.image = Bitmap.createBitmap(0, 0, Config.ARGB_8888);
+			ImageManager.image = Bitmap.createBitmap(1, 1, Config.ARGB_8888);
 		}
 		return ImageManager.image;
 	}

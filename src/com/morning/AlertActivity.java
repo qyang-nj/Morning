@@ -67,7 +67,7 @@ public class AlertActivity extends Activity {
 		
 		TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
 		Calendar cal = Calendar.getInstance();
-		lblCurrentTime.setText(DateFormat.format("hh:mm ", cal.getTime()));
+		lblCurrentTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
 		
 		ImageView imgShown = (ImageView) findViewById(R.id.imgShown);
 		imgShown.setImageBitmap(ImageManager.getRandomImage());
@@ -132,7 +132,7 @@ public class AlertActivity extends Activity {
 		// Upon interacting with UI controls, delay any scheduled hide()
 		// operations to prevent the jarring behavior of controls going away
 		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
+		findViewById(R.id.btn_snooze).setOnTouchListener(
 				mDelayHideTouchListener);
 		
 		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);

@@ -8,24 +8,24 @@
     <LinearLayout
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
-        
-        <TextView 
+
+        <TextView
             android:id="@+id/lblCurrentTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
-            android:textSize="60sp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="60sp" />
 
         <ImageView
             android:id="@+id/imgShown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="haha" />
+            android:layout_marginBottom="90dp"
+            android:contentDescription="@null" />
     </LinearLayout>
-
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -43,12 +43,20 @@
             tools:ignore="UselessParent" >
 
             <Button
-                android:id="@+id/dummy_button"
+                android:id="@+id/btn_snooze"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/snooze" />
+
+            <Button
+                android:id="@+id/btn_off"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/off" />
         </LinearLayout>
     </FrameLayout>
 

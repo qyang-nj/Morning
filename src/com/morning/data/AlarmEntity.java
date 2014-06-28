@@ -3,7 +3,10 @@ package com.morning.data;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class AlarmEntity implements Comparable<AlarmEntity> {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 	
 	public AlarmEntity() {
 		Calendar cal = Calendar.getInstance();
@@ -103,6 +106,34 @@ public class AlarmEntity implements Comparable<AlarmEntity> {
 	public int compareTo(AlarmEntity another) {
 		return Long.valueOf(createTime).compareTo(another.getCreateTime());
 	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeInt(hour);
+		dest.writeInt(minute);
+		dest.writeString(name);
+		dest.writeString(ringtone);
+		dest.writeInt(repeat);
+		dest.writeLong(createTime);
+		dest.writeInt(activated ? 1 : 0);
+	}
+	
+	private void readFromParcel(Parcel in) {   
+		id = in.readInt(); 
+		hour = in.readInt();
+		minute = in.readInt();
+		name = in.readString();
+		ringtone = in.readString();
+		repeat = in.readInt();
+		createTime = in.readLong();
+		activated = in.readInt() > 0;
+	}
 
 	private Integer id = null; /* If not in db, this should be null. */
 	private int hour;
@@ -112,5 +143,4 @@ public class AlarmEntity implements Comparable<AlarmEntity> {
 	private int repeat = 0;
 	private long createTime;
 	private boolean activated = true;
-
 }

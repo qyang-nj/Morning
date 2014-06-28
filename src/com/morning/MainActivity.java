@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 
 import com.morning.data.AlarmEntityManager;
+import com.morning.data.ImageManager;
 import com.morning.ui.TypefaceSpan;
 
 public class MainActivity extends Activity {
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
 		actionBar.setTitle(s);
 
 		AlarmEntityManager.init(this);
+		ImageManager.downloadImage(this);
 	}
 
 	@Override

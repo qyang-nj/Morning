@@ -6,4 +6,8 @@
           android:icon="@drawable/ic_action_new"
           android:title="@string/action_new"
           android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/test"
+        android:title="test"
+        android:showAsAction="always" />
 </menu>
