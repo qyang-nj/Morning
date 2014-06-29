@@ -27,9 +27,7 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="com.morning.AlarmReciever"
-            android:process=":remote" >
+        <receiver android:name="com.morning.AlarmReciever" >
         </receiver>
 
         <activity

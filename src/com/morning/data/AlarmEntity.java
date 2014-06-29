@@ -7,7 +7,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
-	
+
+	public static final Parcelable.Creator<AlarmEntity> CREATOR = new Creator<AlarmEntity>() {
+		@Override
+		public AlarmEntity[] newArray(int size) {
+			return new AlarmEntity[size];
+		}
+
+		@Override
+		public AlarmEntity createFromParcel(Parcel source) {
+			return new AlarmEntity(source);
+		}
+	};
+
 	public AlarmEntity() {
 		Calendar cal = Calendar.getInstance();
 		this.hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -26,6 +38,10 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 		this();
 		this.hour = hour;
 		this.minute = minute;
+	}
+
+	public AlarmEntity(Parcel in) {
+		readFromParcel(in);
 	}
 
 	public void setId(int id) {
@@ -75,7 +91,7 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 	public int getRepeat() {
 		return repeat;
 	}
-	
+
 	public void setCreateTime(long time) {
 		this.createTime = time;
 	}
@@ -101,12 +117,12 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 				cal.getTime());
 		return str;
 	}
-	
+
 	@Override
 	public int compareTo(AlarmEntity another) {
 		return Long.valueOf(createTime).compareTo(another.getCreateTime());
 	}
-	
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -114,7 +130,7 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
+		dest.writeSerializable(id);
 		dest.writeInt(hour);
 		dest.writeInt(minute);
 		dest.writeString(name);
@@ -123,9 +139,9 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 		dest.writeLong(createTime);
 		dest.writeInt(activated ? 1 : 0);
 	}
-	
-	private void readFromParcel(Parcel in) {   
-		id = in.readInt(); 
+
+	private void readFromParcel(Parcel in) {
+		id = (Integer)in.readSerializable();
 		hour = in.readInt();
 		minute = in.readInt();
 		name = in.readString();

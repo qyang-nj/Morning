@@ -62,9 +62,8 @@ public class ListFragment extends Fragment {
 		
 		/* Test Code */
 		if (id == R.id.test) {
-			Intent intent = new Intent(getActivity(), AlertActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			getActivity().startActivity(intent);
+			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
+			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
 			return true;
 		}
 		

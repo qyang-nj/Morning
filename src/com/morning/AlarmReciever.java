@@ -7,11 +7,11 @@ import android.content.Intent;
 public class AlarmReciever extends BroadcastReceiver {
 
 	@Override
-	public void onReceive(Context context, Intent arg1) {
+	public void onReceive(Context context, Intent in) {
 		Intent intent = new Intent(context, AlertActivity.class);
+		intent.putExtras(in);
 
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
-
 }

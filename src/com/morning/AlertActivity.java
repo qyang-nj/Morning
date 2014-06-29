@@ -1,21 +1,27 @@
 package com.morning;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.media.Ringtone;
+import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.morning.data.AlarmEntity;
 import com.morning.data.ImageManager;
 import com.qyang.util.SystemUiHider;
 
@@ -53,8 +59,9 @@ public class AlertActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-	
-	private Ringtone ringtone = null;
+
+	private AlarmEntity alarm = null;
+	private MediaPlayer ringtonePlayer = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +71,11 @@ public class AlertActivity extends Activity {
 		getActionBar().hide();
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
-		
+
 		TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
 		Calendar cal = Calendar.getInstance();
 		lblCurrentTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
-		
+
 		ImageView imgShown = (ImageView) findViewById(R.id.imgShown);
 		imgShown.setImageBitmap(ImageManager.getRandomImage());
 
@@ -134,11 +141,43 @@ public class AlertActivity extends Activity {
 		// while interacting with the UI.
 		findViewById(R.id.btn_snooze).setOnTouchListener(
 				mDelayHideTouchListener);
-		
-		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-		Ringtone r = RingtoneManager.getRingtone(this, alert);
-		r.play();
-		ringtone = r;
+
+		Intent in = getIntent();
+		alarm = in.getParcelableExtra(Constants.INTEND_KEY_ALARM);
+		assert alarm != null;
+
+		Uri uri = alarm.getRingtone() == null ? RingtoneManager
+				.getDefaultUri(RingtoneManager.TYPE_ALARM) : Uri.parse(alarm
+				.getRingtone());
+
+		try {
+			MediaPlayer player = new MediaPlayer();
+			player.setDataSource(this, uri);
+			final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+				player.setAudioStreamType(AudioManager.STREAM_RING);
+				player.setLooping(true);
+				player.prepare();
+				player.start();
+			}
+			ringtonePlayer = player;
+		} catch (IllegalArgumentException e) {
+			Log.e(Constants.TAG, e.getMessage());
+		} catch (SecurityException e) {
+			Log.e(Constants.TAG, e.getMessage());
+		} catch (IllegalStateException e) {
+			Log.e(Constants.TAG, e.getMessage());
+		} catch (IOException e) {
+			Log.e(Constants.TAG, e.getMessage());
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (ringtonePlayer != null) {
+			ringtonePlayer.stop();
+		}
 	}
 
 	@Override
@@ -162,9 +201,9 @@ public class AlertActivity extends Activity {
 			if (AUTO_HIDE) {
 				delayedHide(AUTO_HIDE_DELAY_MILLIS);
 			}
-			
-			if (ringtone != null) {
-				ringtone.stop();
+
+			if (ringtonePlayer != null) {
+				ringtonePlayer.stop();
 			}
 			return false;
 		}
