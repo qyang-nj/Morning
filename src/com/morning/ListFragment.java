@@ -2,12 +2,9 @@ package com.morning;
 
 import java.util.List;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +18,6 @@ import android.widget.GridView;
 
 import com.morning.data.AlarmEntity;
 import com.morning.data.AlarmEntityManager;
-import com.morning.data.ImageManager;
 
 public class ListFragment extends Fragment {
 
@@ -60,12 +56,12 @@ public class ListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		
-		/* Test Code */
-		if (id == R.id.test) {
-			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
-			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
-			return true;
-		}
+//		/* Test Code */
+//		if (id == R.id.test) {
+//			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
+//			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
+//			return true;
+//		}
 		
 		if (id == R.id.action_add) {
 			FragmentManager fm = getFragmentManager();

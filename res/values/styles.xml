@@ -18,6 +18,10 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:actionBarStyle">@style/Curstom.ActionBar</item>
+        
+        <!-- Intentionally hide the actionbar at the very beginning.  -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTitleSize">0dp</item>
     </style>
 
     <style name="Curstom.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">

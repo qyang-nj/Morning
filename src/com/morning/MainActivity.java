@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.Window;
 
 import com.morning.data.AlarmEntityManager;
 import com.morning.data.ImageManager;
@@ -33,7 +34,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//TODO: Learn below line
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+		
 		setContentView(R.layout.activity_main);
+		ActionBar actionBar = getActionBar();
+		actionBar.show();
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -45,8 +51,6 @@ public class MainActivity extends Activity {
 				R.string.app_name));
 		s.setSpan(new TypefaceSpan(this, "Amatic-Bold.ttf"), 0, s.length(),
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-		ActionBar actionBar = getActionBar();
 		actionBar.setTitle(s);
 
 		AlarmEntityManager.init(this);

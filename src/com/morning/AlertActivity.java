@@ -141,6 +141,8 @@ public class AlertActivity extends Activity {
 		// while interacting with the UI.
 		findViewById(R.id.btn_snooze).setOnTouchListener(
 				mDelayHideTouchListener);
+		findViewById(R.id.btn_off).setOnTouchListener(
+				mDelayHideTouchListener);
 
 		Intent in = getIntent();
 		alarm = in.getParcelableExtra(Constants.INTEND_KEY_ALARM);
@@ -205,6 +207,7 @@ public class AlertActivity extends Activity {
 			if (ringtonePlayer != null) {
 				ringtonePlayer.stop();
 			}
+			finish();
 			return false;
 		}
 	};
