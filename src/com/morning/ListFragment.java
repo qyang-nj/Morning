@@ -56,12 +56,12 @@ public class ListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		
-//		/* Test Code */
-//		if (id == R.id.test) {
-//			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
-//			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
-//			return true;
-//		}
+		/* Test Code */
+		if (id == R.id.test) {
+			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
+			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
+			return true;
+		}
 		
 		if (id == R.id.action_add) {
 			FragmentManager fm = getFragmentManager();
