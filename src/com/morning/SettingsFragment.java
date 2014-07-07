@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
-import com.morning.data.AlarmEntityManager;
 import com.morning.data.ImageManager;
 
 public class SettingsFragment extends Fragment {
@@ -76,12 +76,13 @@ public class SettingsFragment extends Fragment {
 		public void onClick(View view) {
 			alarm.setHour(timePicker.getCurrentHour());
 			alarm.setMinute(timePicker.getCurrentMinute());
+			alarm.setEnabled(true);
 			adapter.Sync();
 
 			if (isUpdate) {
-				AlarmEntityManager.getInstance().updateAlarm(alarm);
+				AlarmDbHandler.getInstance().updateAlarm(alarm);
 			} else { /* create new */
-				AlarmEntityManager.getInstance().addAlarm(alarm);
+				AlarmDbHandler.getInstance().addAlarm(alarm);
 			}
 
 			AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());

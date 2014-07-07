@@ -2,6 +2,8 @@ package com.morning;
 
 import java.util.EnumSet;
 
+import com.morning.data.RepeatOption;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;

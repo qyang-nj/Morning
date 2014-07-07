@@ -10,7 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Window;
 
-import com.morning.data.AlarmEntityManager;
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.ImageManager;
 import com.morning.ui.TypefaceSpan;
 
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		actionBar.setTitle(s);
 
-		AlarmEntityManager.init(this);
+		AlarmDbHandler.init(this);
 		ImageManager.downloadImage(this);
 	}
 

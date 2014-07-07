@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.morning.MainActivity.Callback;
 import com.morning.RepeatDialogFragment.NoticeListener;
 import com.morning.data.AlarmEntity;
+import com.morning.data.RepeatOption;
 
 public class SettingsItemAdapter extends BaseAdapter {
 
@@ -85,7 +86,7 @@ public class SettingsItemAdapter extends BaseAdapter {
 		/* REPEAT */
 		Item itRepeat = new Item();
 		itRepeat.title = "REPEAT";
-		itRepeat.content = RepeatOption.set2String(RepeatOption.val2Set(alarm
+		itRepeat.content = RepeatOption.formatSet(RepeatOption.getSetFromValue(alarm
 				.getRepeat()));
 		itRepeat.layoutIndex = 1;
 		itRepeat.click = new OnItemClickListener() {
@@ -93,16 +94,16 @@ public class SettingsItemAdapter extends BaseAdapter {
 			public void onItemClick(AdapterView<?> parent, final View view,
 					int position, long id) {
 				RepeatDialogFragment repeatDialog = new RepeatDialogFragment();
-				repeatDialog.setRepeat(RepeatOption.val2Set(alarm.getRepeat()));
+				repeatDialog.setRepeat(RepeatOption.getSetFromValue(alarm.getRepeat()));
 				repeatDialog.setNoticeListener(new NoticeListener() {
 					@Override
 					public void onDialogPositiveClick(
 							EnumSet<RepeatOption> repeats) {
-						alarm.setRepeat(RepeatOption.set2Val(repeats));
+						alarm.setRepeat(RepeatOption.getValueFromSet(repeats));
 						TextView tv = (TextView) view
 								.findViewById(R.id.lblContent);
-						tv.setText(RepeatOption.set2String(RepeatOption
-								.val2Set(alarm.getRepeat())));
+						tv.setText(RepeatOption.formatSet(RepeatOption
+								.getSetFromValue(alarm.getRepeat())));
 					}
 				});
 				repeatDialog.show(context.getFragmentManager(), "repeat");

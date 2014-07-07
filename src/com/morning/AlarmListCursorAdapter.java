@@ -1,66 +1,42 @@
 package com.morning;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
-import com.morning.data.AlarmEntityManager;
 
-public class ListAdapter extends BaseAdapter {
-	private List<AlarmEntity> alarms;
-	private Context context;
+public class AlarmListCursorAdapter extends CursorAdapter {
+	private LayoutInflater inflater;
 
-	public ListAdapter(Context context, List<AlarmEntity> alarms) {
-		this.context = context;
-		this.alarms = alarms;
+	public AlarmListCursorAdapter(Context context, Cursor c, int flags) {
+		super(context, c, flags);
+		this.inflater = LayoutInflater.from(context);
 	}
 
 	@Override
-	public int getCount() {
-		return alarms.size();
-	}
+	public void bindView(View view, final Context context, Cursor cursor) {
+		final AlarmEntity alarm = AlarmDbHandler.getAlarmFromCursor(cursor);
+		view.setTag(alarm);
 
-	@Override
-	public Object getItem(int position) {
-		return alarms.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
-		AlarmEntity alarm = alarms.get(position);
-
-		if (convertView == null) {
-			LayoutInflater inflater = LayoutInflater.from(context);
-			convertView = inflater.inflate(R.layout.alarm_item, null);
-		}
-
-		convertView.setTag(alarm);
-
-		TextView time = (TextView) convertView.findViewById(R.id.lblTime);
+		TextView time = (TextView) view.findViewById(R.id.lblTime);
 		time.setText(alarm.toString());
 
-		TextView title = (TextView) convertView.findViewById(R.id.lblName);
+		TextView title = (TextView) view.findViewById(R.id.lblName);
 		title.setText(alarm.getName());
 
-		ImageView btnMore = (ImageView) convertView.findViewById(R.id.btnMore);
+		ImageView btnMore = (ImageView) view.findViewById(R.id.btnMore);
 		btnMore.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -79,9 +55,6 @@ public class ListAdapter extends BaseAdapter {
 											return;
 										}
 
-										AlarmEntity alarm = alarms
-												.get(position);
-
 										FragmentTransaction transaction = ((Activity) context)
 												.getFragmentManager()
 												.beginTransaction();
@@ -97,7 +70,7 @@ public class ListAdapter extends BaseAdapter {
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int id) {
-										AlarmEntityManager.getInstance().delAlarm(alarms.get(position));
+										AlarmDbHandler.getInstance().delAlarm(alarm);
 										notifyDataSetChanged();
 									}
 								});
@@ -107,13 +80,17 @@ public class ListAdapter extends BaseAdapter {
 			}
 		});
 
-		if (alarm.isActivated()) {
-			convertView.setBackgroundColor(context.getResources().getColor(
+		if (alarm.isEnabled()) {
+			view.setBackgroundColor(context.getResources().getColor(
 					R.color.main_color));
 		} else {
-			convertView.setBackgroundDrawable(context.getResources()
+			view.setBackgroundDrawable(context.getResources()
 					.getDrawable(R.drawable.itemborder));
 		}
-		return convertView;
+	}
+
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		return inflater.inflate(R.layout.alarm_item, null);
 	}
 }

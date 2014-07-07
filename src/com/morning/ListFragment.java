@@ -1,7 +1,5 @@
 package com.morning;
 
-import java.util.List;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -14,10 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
-import com.morning.data.AlarmEntityManager;
 
 public class ListFragment extends Fragment {
 
@@ -27,8 +26,9 @@ public class ListFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
 
-		List<AlarmEntity> alarms = AlarmEntityManager.getInstance().getAllAlarms();
-		final ListAdapter adapter = new ListAdapter(getActivity(), alarms);
+//		List<AlarmEntity> alarms = AlarmEntityManager.getInstance().getAllAlarms();
+//		final ListAdapter adapter = new ListAdapter(getActivity(), alarms);
+		final CursorAdapter adapter = new AlarmListCursorAdapter(getActivity(), AlarmDbHandler.getInstance().getCursorOfList(), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 		GridView listView = (GridView) rootView.findViewById(R.id.grid);
 		listView.setAdapter(adapter);
@@ -37,8 +37,9 @@ public class ListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				AlarmEntity alarm = (AlarmEntity) view.getTag();
-				alarm.setActivated(!alarm.isActivated());
-				AlarmEntityManager.getInstance().updateAlarm(alarm);
+				alarm.setEnabled(!alarm.isEnabled());
+				alarm.commit();
+				adapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
 				adapter.notifyDataSetChanged();
 			}
 		});
@@ -59,7 +60,7 @@ public class ListFragment extends Fragment {
 		/* Test Code */
 		if (id == R.id.test) {
 			AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
-			am.setAlarm(AlarmEntityManager.getInstance().getAllAlarms().get(0), true);
+			am.setAlarm(new AlarmEntity(), true);
 			return true;
 		}
 		

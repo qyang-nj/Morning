@@ -38,6 +38,10 @@ public class AlertActivity extends Activity {
 
 		setContentView(R.layout.activity_alert);
 		getActionBar().hide();
+		
+		Intent in = getIntent();
+		alarm = in.getParcelableExtra(Constants.INTEND_KEY_ALARM);
+		assert alarm != null;
 
 		TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
 		Calendar cal = Calendar.getInstance();
@@ -57,10 +61,6 @@ public class AlertActivity extends Activity {
 				mDelayHideTouchListener);
 		findViewById(R.id.btn_off).setOnTouchListener(
 				mDelayHideTouchListener);
-
-		Intent in = getIntent();
-		alarm = in.getParcelableExtra(Constants.INTEND_KEY_ALARM);
-		assert alarm != null;
 
 		Uri uri = alarm.getRingtone() == null ? RingtoneManager
 				.getDefaultUri(RingtoneManager.TYPE_ALARM) : Uri.parse(alarm
@@ -91,7 +91,7 @@ public class AlertActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (ringtonePlayer != null) {
+		if (ringtonePlayer.isPlaying()) {
 			ringtonePlayer.stop();
 		}
 	}
@@ -104,7 +104,7 @@ public class AlertActivity extends Activity {
 	View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
 		@Override
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (ringtonePlayer != null) {
+			if (ringtonePlayer.isPlaying()) {
 				ringtonePlayer.stop();
 			}
 			finish();

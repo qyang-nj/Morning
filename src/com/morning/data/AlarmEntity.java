@@ -2,6 +2,7 @@ package com.morning.data;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.EnumSet;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -25,19 +26,6 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 		this.hour = cal.get(Calendar.HOUR_OF_DAY);
 		this.minute = cal.get(Calendar.MINUTE);
 		this.createTime = System.currentTimeMillis();
-	}
-
-	public AlarmEntity(int hour, int minute, String name) {
-		this();
-		this.hour = hour;
-		this.minute = minute;
-		this.name = name;
-	}
-
-	public AlarmEntity(int hour, int minute) {
-		this();
-		this.hour = hour;
-		this.minute = minute;
 	}
 
 	public AlarmEntity(Parcel in) {
@@ -100,12 +88,63 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 		return createTime;
 	}
 
-	public boolean isActivated() {
-		return activated;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setActivated(boolean on) {
-		activated = on;
+	public void setEnabled(boolean on) {
+		enabled = on;
+	}
+	
+	public void setSnooze(int min) {
+		this.snooze = min;
+	}
+
+	/**
+	 * Get the next alert time of this alarm.
+	 * @return the absolute milliseconds
+	 */
+	public long getNextTime() {
+
+		if (this.enabled == false) {
+			return Long.MAX_VALUE;
+		}
+
+		Calendar cal = Calendar.getInstance();
+		if (this.snooze > 0) {
+			cal.add(Calendar.MINUTE, snooze);
+			return cal.getTimeInMillis();
+		}
+		
+		cal.set(Calendar.HOUR_OF_DAY, this.hour);
+		cal.set(Calendar.MINUTE, this.minute);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		if (this.repeat == 0) {
+			if (cal.compareTo(Calendar.getInstance()) == -1) { /* Before */
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+			}
+		} else {
+			EnumSet<RepeatOption> options = RepeatOption.getSetFromValue(this.repeat);
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			int dayCount = 0;
+			for (; dayCount < 7; ++dayCount) {
+				int day = ((dayOfWeek - 1) + dayCount) % 7 + 1;
+				if (options.contains(RepeatOption.fromCalendar(day))) {
+					break;
+				}
+			}
+			cal.add(Calendar.DAY_OF_YEAR, dayCount);
+		}
+		return cal.getTimeInMillis();
+	}
+	
+	public void commit() {
+		if (id == null) {
+			return;
+		}
+		AlarmDbHandler.getInstance().updateAlarm(this);
 	}
 
 	@Override
@@ -137,18 +176,18 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 		dest.writeString(ringtone);
 		dest.writeInt(repeat);
 		dest.writeLong(createTime);
-		dest.writeInt(activated ? 1 : 0);
+		dest.writeInt(enabled ? 1 : 0);
 	}
 
 	private void readFromParcel(Parcel in) {
-		id = (Integer)in.readSerializable();
+		id = (Integer) in.readSerializable();
 		hour = in.readInt();
 		minute = in.readInt();
 		name = in.readString();
 		ringtone = in.readString();
 		repeat = in.readInt();
 		createTime = in.readLong();
-		activated = in.readInt() > 0;
+		enabled = in.readInt() > 0;
 	}
 
 	private Integer id = null; /* If not in db, this should be null. */
@@ -156,7 +195,8 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 	private int minute;
 	private String name = "";
 	private String ringtone;
-	private int repeat = 0;
+	private int repeat = 0; /* Enum of RepeatOption */
 	private long createTime;
-	private boolean activated = true;
+	private boolean enabled = true;
+	private int snooze = 0; /* minutes */
 }
