@@ -19,6 +19,16 @@ import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
 
 public class ListFragment extends Fragment {
+	private CursorAdapter listAdapter;
+	
+	@Override
+	public void onResume () {
+		super.onResume();
+		if (listAdapter != null) {
+			listAdapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
+			listAdapter.notifyDataSetChanged();
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,10 +36,9 @@ public class ListFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
 
-//		List<AlarmEntity> alarms = AlarmEntityManager.getInstance().getAllAlarms();
-//		final ListAdapter adapter = new ListAdapter(getActivity(), alarms);
 		final CursorAdapter adapter = new AlarmListCursorAdapter(getActivity(), AlarmDbHandler.getInstance().getCursorOfList(), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
+		listAdapter = adapter;
+		
 		GridView listView = (GridView) rootView.findViewById(R.id.grid);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {

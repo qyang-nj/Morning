@@ -22,12 +22,6 @@ import android.widget.TextView;
 import com.morning.data.AlarmEntity;
 import com.morning.data.ImageManager;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- * 
- * @see SystemUiHider
- */
 public class AlertActivity extends Activity {
 	private AlarmEntity alarm = null;
 	private MediaPlayer ringtonePlayer = null;
@@ -89,8 +83,14 @@ public class AlertActivity extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
+	protected void onStop() {
 		super.onPause();
+		
+		if (alarm.getRepeat() == 0) {
+			alarm.setEnabled(false);
+			alarm.commit();
+		}
+		
 		if (ringtonePlayer.isPlaying()) {
 			ringtonePlayer.stop();
 		}
@@ -103,9 +103,12 @@ public class AlertActivity extends Activity {
 	 */
 	View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
 		@Override
-		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (ringtonePlayer.isPlaying()) {
-				ringtonePlayer.stop();
+		public boolean onTouch(View view, MotionEvent motionEvent) {			
+			int viewId = view.getId();
+			if (viewId == R.id.btn_snooze) {
+				alarm.setSnooze(Constants.SNOOZE_TIME);
+			} else if (viewId == R.id.btn_off) {
+
 			}
 			finish();
 			return false;
