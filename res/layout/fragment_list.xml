@@ -18,4 +18,14 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="6dp" />
 
+    <TextView
+        android:id="@+id/empty_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="@string/no_alarm"
+        android:textColor="@color/light_grey"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
 </RelativeLayout>
