@@ -26,7 +26,6 @@ public class ListFragment extends Fragment {
 	super.onResume();
 	if (listAdapter != null) {
 	    listAdapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-	    listAdapter.notifyDataSetChanged();
 	}
     }
 
@@ -47,7 +46,6 @@ public class ListFragment extends Fragment {
 		alarm.setEnabled(!alarm.isEnabled());
 		alarm.commit();
 		adapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-		adapter.notifyDataSetChanged();
 	    }
 	});
 	listView.setEmptyView(rootView.findViewById(R.id.empty_list_view));

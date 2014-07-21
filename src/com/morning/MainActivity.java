@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Window;
 
 import com.morning.data.AlarmDbHandler;
@@ -33,6 +34,8 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+	    	Log.i(Constants.TAG, "SDK Version: " + android.os.Build.VERSION.SDK_INT);
+	    
 		super.onCreate(savedInstanceState);
 		//TODO: Learn below line
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);

@@ -26,9 +26,8 @@ public class ImageDbHandler extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String sql_create_table = String.format(
-				"CREATE TABLE %s (%s TEXT PRIMARY KEY, %s BLOB)", TABLE_NAME,
-				KEY_URL, KEY_IMAGE);
+		String sql_create_table = String.format("CREATE TABLE %s (%s TEXT PRIMARY KEY, %s BLOB)", TABLE_NAME, KEY_URL,
+		        KEY_IMAGE);
 		db.execSQL(sql_create_table);
 	}
 
@@ -53,8 +52,7 @@ public class ImageDbHandler extends SQLiteOpenHelper {
 	}
 
 	public Bitmap getImage(String url) {
-		String selectQuery = String.format(
-				"SELECT image FROM %s WHERE url = %s", TABLE_NAME, url);
+		String selectQuery = String.format("SELECT image FROM %s WHERE url = %s", TABLE_NAME, url);
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);

@@ -61,7 +61,6 @@ public class AlarmListCursorAdapter extends CursorAdapter {
 		    public void onClick(DialogInterface dialog, int id) {
 			AlarmDbHandler.getInstance().delAlarm(alarm);
 			changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-			notifyDataSetChanged();
 		    }
 		});
 
