@@ -81,8 +81,9 @@ public class SettingsFragment extends Fragment {
 		AlarmDbHandler.getInstance().addAlarm(alarm);
 	    }
 
-	    AlarmServiceHelper ash = new AlarmServiceHelper(getActivity());
-	    ash.setAlarm(alarm);
+	    AlarmServiceHelper.getInstance().updateAlert();
+	    //ash.setAlarm(alarm);
+	    //ash.updateAlert();
 	    getActivity().getFragmentManager().popBackStack();
 
 	    ImageManager.downloadImage(getActivity());

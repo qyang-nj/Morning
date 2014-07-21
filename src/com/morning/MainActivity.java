@@ -57,6 +57,7 @@ public class MainActivity extends Activity {
 		actionBar.setTitle(s);
 
 		AlarmDbHandler.init(this);
+		AlarmServiceHelper.init(this);
 		ImageManager.downloadImage(this);
 	}
 

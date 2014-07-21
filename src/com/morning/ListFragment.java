@@ -45,6 +45,8 @@ public class ListFragment extends Fragment {
 		AlarmEntity alarm = (AlarmEntity) view.getTag();
 		alarm.setEnabled(!alarm.isEnabled());
 		alarm.commit();
+		AlarmServiceHelper.getInstance().updateAlert();
+		
 		adapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
 	    }
 	});
@@ -65,8 +67,8 @@ public class ListFragment extends Fragment {
 
 	/* Test Code */
 	if (id == R.id.test) {
-	    AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
-	    am.setAlarm(new AlarmEntity(), true);
+	    //AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
+	    //am.setAlarm(new AlarmEntity(), true);
 	    return true;
 	}
 

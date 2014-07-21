@@ -9,31 +9,82 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
 
 public class AlarmServiceHelper {
 
-    public AlarmServiceHelper(Context context) {
-	this.context = context;
+    public static void init(Context context) {
+        ash = new AlarmServiceHelper(context);
     }
 
-    public void setAlarm(AlarmEntity alarm) {
-	setAlarm(alarm, false);
+    public static AlarmServiceHelper getInstance() {
+        if (ash == null) {
+            throw new RuntimeException("AlarmServiceHelper has not been initialized.");
+        }
+        return ash;
     }
 
-    /* For test use only. */
-    public void setAlarm(AlarmEntity alarm, boolean now) {
-	Intent intentAlarm = new Intent(context, AlarmReciever.class);
-	intentAlarm.putExtra(Constants.INTEND_KEY_ALARM, alarm);
-	AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    public void updateAlert() {
+        AlarmEntity alarm = dbHandler.getEarliestAlarm();
+        if (alarm == null) { /* No alarm needs to alert. */
+            cancel();
+            return;
+        }
 
-	long alertTime = now ? 0 : alarm.getNextTime();
-	//TODO API19
-	alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
-		PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-
-	Log.i(Constants.TAG, "Alarm Set: " + DateFormat.getDateTimeInstance().format(new Date(alertTime)));
+        if (currentAlarm == null) {
+            cancel();
+            set(alarm);
+        } else if (!alarm.getId().equals(currentAlarm.getId())) {
+            cancel();
+            set(alarm);
+        }
     }
+
+    private AlarmServiceHelper(Context context) {
+        this.context = context;
+        this.dbHandler = AlarmDbHandler.getInstance();
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    private void set(AlarmEntity alarm) {
+        Intent intentAlarm = new Intent(context, AlarmReciever.class);
+        intentAlarm.putExtra(Constants.INTEND_KEY_ALARM, alarm);
+
+        long alertTime = alarm.getNextTime();
+        PendingIntent operation = PendingIntent
+                .getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime, operation);
+
+        currentAlertTime = alertTime;
+        currentOperation = operation;
+        currentAlarm = alarm;
+        Log.i(Constants.TAG, "-- Alarm Set: " + DateFormat.getDateTimeInstance().format(new Date(alertTime)));
+    }
+
+    /**
+     * Cancel current alarm;
+     */
+    private void cancel() {
+        if (currentOperation == null) {
+            return;
+        }
+        alarmManager.cancel(currentOperation);
+        Log.i(Constants.TAG, "-- Alarm Canceled: "
+                + DateFormat.getDateTimeInstance().format(new Date(currentAlertTime)));
+
+        currentOperation = null;
+        currentAlertTime = Long.MAX_VALUE;
+        currentAlarm = null;
+    }
+
+    private static AlarmServiceHelper ash;
 
     private Context context;
+    private AlarmManager alarmManager;
+    private AlarmDbHandler dbHandler;
+
+    private long currentAlertTime = Long.MAX_VALUE;
+    private AlarmEntity currentAlarm;
+    private PendingIntent currentOperation;
 }

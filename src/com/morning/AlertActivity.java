@@ -45,11 +45,8 @@ public class AlertActivity extends Activity {
         ImageView imgShown = (ImageView) findViewById(R.id.imgShown);
         imgShown.setImageBitmap(ImageManager.getRandomImage());
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
         findViewById(R.id.btn_snooze).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.btn_off).setOnTouchListener(mDelayHideTouchListener);
 
