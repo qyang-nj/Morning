@@ -32,7 +32,7 @@ public class AlarmServiceHelper {
 	alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime,
 		PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
-	Log.d(Constants.TAG, "Alarm Set: " + DateFormat.getDateTimeInstance().format(new Date(alertTime)));
+	Log.i(Constants.TAG, "Alarm Set: " + DateFormat.getDateTimeInstance().format(new Date(alertTime)));
     }
 
     private Context context;
