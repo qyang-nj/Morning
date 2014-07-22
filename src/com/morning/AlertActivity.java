@@ -37,6 +37,7 @@ public class AlertActivity extends Activity {
         assert alarm != null;
 
         dbHandler = AlarmDbHandler.getInstance(this);
+        alarmServiceHelper = AlarmServiceHelper.getInstance(this);
 
         TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
         Calendar cal = Calendar.getInstance();
@@ -97,7 +98,7 @@ public class AlertActivity extends Activity {
         }
 
         ringtone.stop();
-        AlarmServiceHelper.getInstance(this).updateAlert();
+        alarmServiceHelper.updateAlert();
     }
 
     /**
@@ -122,4 +123,5 @@ public class AlertActivity extends Activity {
     private Ringtone ringtone;
     private PowerManager.WakeLock wakeLock;
     private AlarmDbHandler dbHandler;
+    private AlarmServiceHelper alarmServiceHelper;
 }

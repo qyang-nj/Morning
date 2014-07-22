@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class AlarmDbHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8; /* Only increase */
+    private static final int DATABASE_VERSION = 9; /* Only increase */
     private static final String DATABASE_NAME = "alarm_app";
     private static final String TABLE_NAME = "alarms";
 
@@ -34,7 +34,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql_create_table = String
-                .format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER)",
+                .format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER)",
                         TABLE_NAME, KEY_ID, KEY_NAME, KEY_HOUR, KEY_MINUTE, KEY_REPEAT, KEY_ACTIVATED, KEY_CTIME,
                         KEY_RINGTONE, KEY_NEXT_TIME);
         db.execSQL(sql_create_table);
@@ -131,6 +131,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
         AlarmEntity alarm = null;
         while (cursor.moveToNext()) { /* Only once */
             alarm = getAlarmFromCursor(cursor);
+            break;
         }
 
         db.close();
