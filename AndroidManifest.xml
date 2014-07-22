@@ -20,9 +20,11 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.morning.MainActivity"
-            android:label="Morning!" >
+            android:label="Morning!"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,6 +35,7 @@
             android:name="com.morning.AlertActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_time_out"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" >
         </activity>
     </application>
