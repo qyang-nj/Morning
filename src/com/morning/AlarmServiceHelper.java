@@ -14,13 +14,9 @@ import com.morning.data.AlarmEntity;
 
 public class AlarmServiceHelper {
 
-    public static void init(Context context) {
-        ash = new AlarmServiceHelper(context);
-    }
-
-    public static AlarmServiceHelper getInstance() {
+    public static AlarmServiceHelper getInstance(Context context) {
         if (ash == null) {
-            throw new RuntimeException("AlarmServiceHelper has not been initialized.");
+            ash = new AlarmServiceHelper(context);
         }
         return ash;
     }
@@ -43,7 +39,7 @@ public class AlarmServiceHelper {
 
     private AlarmServiceHelper(Context context) {
         this.context = context;
-        this.dbHandler = AlarmDbHandler.getInstance();
+        this.dbHandler = AlarmDbHandler.getInstance(context);
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 

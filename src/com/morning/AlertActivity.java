@@ -18,13 +18,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
 import com.morning.data.ImageManager;
 
 public class AlertActivity extends Activity {
-    private AlarmEntity alarm = null;
-    private Ringtone ringtone;
-    private PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,8 @@ public class AlertActivity extends Activity {
         Intent in = getIntent();
         alarm = in.getParcelableExtra(Constants.INTEND_KEY_ALARM);
         assert alarm != null;
+
+        dbHandler = AlarmDbHandler.getInstance(this);
 
         TextView lblCurrentTime = (TextView) findViewById(R.id.lblCurrentTime);
         Calendar cal = Calendar.getInstance();
@@ -58,35 +58,51 @@ public class AlertActivity extends Activity {
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP
                 | PowerManager.ON_AFTER_RELEASE, Constants.TAG);
         wakeLock.acquire();
+        Log.i(Constants.TAG, "AlertActivity: wakelock acquired.");
 
         /* Play ringtone */
         Uri uri = alarm.getRingtone() == null ? RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM) : Uri
                 .parse(alarm.getRingtone());
 
         ringtone = new Ringtone(this, uri);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         ringtone.play();
     }
 
     @Override
+    protected void onPause() {
+        Log.i(Constants.TAG, "AlertActivity.onPause()");
+        super.onPause();
+
+        /* Saving data should be in onPause£¨£©, because other activity's onResume() may use this data. */
+        if (alarm.getRepeat() == 0) {
+            alarm.setEnabled(false);
+            dbHandler.updateAlarm(alarm);
+        }
+    }
+
+    @Override
     protected void onStop() {
+        Log.i(Constants.TAG, "AlertActivity.onStop()");
         super.onPause();
 
         /* Release wakelock */
         if (wakeLock != null) {
             wakeLock.release();
+            Log.i(Constants.TAG, "AlertActivity: wakelock released.");
         }
 
-        if (alarm.getRepeat() == 0) {
-            alarm.setEnabled(false);
-            alarm.commit();
-        }
         ringtone.stop();
+        AlarmServiceHelper.getInstance(this).updateAlert();
     }
 
     /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
+     * Touch listener to use for in-layout UI controls to delay hiding the system UI. This is to prevent the jarring
+     * behavior of controls going away while interacting with activity UI.
      */
     View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
@@ -101,4 +117,9 @@ public class AlertActivity extends Activity {
             return false;
         }
     };
+
+    private AlarmEntity alarm = null;
+    private Ringtone ringtone;
+    private PowerManager.WakeLock wakeLock;
+    private AlarmDbHandler dbHandler;
 }

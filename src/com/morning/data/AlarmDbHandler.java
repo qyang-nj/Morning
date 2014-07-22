@@ -24,15 +24,11 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 
     private static AlarmDbHandler instance;
 
-    public static AlarmDbHandler getInstance() {
+    public static AlarmDbHandler getInstance(Context context) {
         if (instance == null) {
-            throw new RuntimeException("AlarmDbHandler has not been initialized.");
+            instance = new AlarmDbHandler(context);
         }
         return instance;
-    }
-
-    public static void init(Context context) {
-        instance = new AlarmDbHandler(context);
     }
 
     @Override
@@ -85,7 +81,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
         db.update(TABLE_NAME, values, KEY_ID + " = ?", new String[] { alarm.getId().toString() });
         db.close();
     }
-    
+
     public void addOrUpdateAlarm(AlarmEntity alarm) {
         if (alarm.getId() == null) {
             addAlarm(alarm);
@@ -124,18 +120,19 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;
     }
-    
+
     public AlarmEntity getEarliestAlarm() {
-        String selectQuery = String.format("SELECT * FROM %s ORDER BY %s ASC LIMIT 1", TABLE_NAME, KEY_NEXT_TIME);
+        String selectQuery = String.format("SELECT * FROM %s WHERE %s < %d ORDER BY %s ASC LIMIT 1", TABLE_NAME,
+                KEY_NEXT_TIME, Long.MAX_VALUE, KEY_NEXT_TIME);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        
+
         AlarmEntity alarm = null;
         while (cursor.moveToNext()) { /* Only once */
             alarm = getAlarmFromCursor(cursor);
         }
-        
+
         db.close();
         return alarm;
     }

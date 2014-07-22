@@ -16,64 +16,57 @@ import com.morning.data.ImageManager;
 import com.morning.ui.TypefaceSpan;
 
 public class MainActivity extends Activity {
-	
-	public static interface Callback {
-		void callback(Object...objects );
-	}
-	
-	private Callback selectRingtoneCallback;
-	
-	public void selectRingtone(Callback cb) {
-		selectRingtoneCallback = cb;
-		Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
-		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-		startActivityForResult(intent, Constants.REQUEST_SELET_RINGTONE);
-	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-	    	Log.i(Constants.TAG, "SDK Version: " + android.os.Build.VERSION.SDK_INT);
-	    
-		super.onCreate(savedInstanceState);
-		//TODO: Learn below line
-		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-		
-		setContentView(R.layout.activity_main);
-		ActionBar actionBar = getActionBar();
-		actionBar.show();
+    public static interface Callback {
+        void callback(Object... objects);
+    }
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new ListFragment()).commit();
-		}
+    private Callback selectRingtoneCallback;
 
-		// TODO: Learn this part of code.
-		SpannableString s = new SpannableString(getResources().getString(
-				R.string.app_name));
-		s.setSpan(new TypefaceSpan(this, "Amatic-Bold.ttf"), 0, s.length(),
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		actionBar.setTitle(s);
+    public void selectRingtone(Callback cb) {
+        selectRingtoneCallback = cb;
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+        startActivityForResult(intent, Constants.REQUEST_SELET_RINGTONE);
+    }
 
-		AlarmDbHandler.init(this);
-		AlarmServiceHelper.init(this);
-		ImageManager.downloadImage(this);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i(Constants.TAG, "SDK Version: " + android.os.Build.VERSION.SDK_INT);
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-		
-		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == Constants.REQUEST_SELET_RINGTONE) {
-				Uri uri = intent
-						.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+        super.onCreate(savedInstanceState);
+        // TODO: Learn below line
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
-				if (selectRingtoneCallback != null) {
-					selectRingtoneCallback.callback(uri);
-				}
-			}
-		}
-	}
+        setContentView(R.layout.activity_main);
+        ActionBar actionBar = getActionBar();
+        actionBar.show();
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction().add(R.id.container, new ListFragment()).commit();
+        }
+
+        // TODO: Learn this part of code.
+        SpannableString s = new SpannableString(getResources().getString(R.string.app_name));
+        s.setSpan(new TypefaceSpan(this, "Amatic-Bold.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        actionBar.setTitle(s);
+
+        ImageManager.downloadImage(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == Constants.REQUEST_SELET_RINGTONE) {
+                Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+
+                if (selectRingtoneCallback != null) {
+                    selectRingtoneCallback.callback(uri);
+                }
+            }
+        }
+    }
 }

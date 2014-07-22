@@ -23,70 +23,69 @@ public class SettingsFragment extends Fragment {
     private SettingsItemAdapter adapter;
 
     public void setDefaultAlarm(AlarmEntity alarm) {
-	this.alarm = alarm;
-	this.isUpdate = true;
+        this.alarm = alarm;
+        this.isUpdate = true;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	if (alarm == null) {
-	    alarm = new AlarmEntity();
-	}
+        if (alarm == null) {
+            alarm = new AlarmEntity();
+        }
 
-	View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-	/* Buttons */
-	Button button = (Button) rootView.findViewById(R.id.btnDone);
-	button.setOnClickListener(new BtnDoneEvent());
+        /* Buttons */
+        Button button = (Button) rootView.findViewById(R.id.btnDone);
+        button.setOnClickListener(new BtnDoneEvent());
 
-	button = (Button) rootView.findViewById(R.id.btnCancel);
-	button.setOnClickListener(new OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		getActivity().getFragmentManager().popBackStack();
-	    }
-	});
+        button = (Button) rootView.findViewById(R.id.btnCancel);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
 
-	/* Settings List */
-	ListView listSettings = (ListView) rootView.findViewById(R.id.listSettingItem);
-	adapter = new SettingsItemAdapter(getActivity(), alarm);
-	listSettings.setAdapter(adapter);
+        /* Settings List */
+        ListView listSettings = (ListView) rootView.findViewById(R.id.listSettingItem);
+        adapter = new SettingsItemAdapter(getActivity(), alarm);
+        listSettings.setAdapter(adapter);
 
-	listSettings.setOnItemClickListener(new OnItemClickListener() {
-	    @Override
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		adapter.clickItem(parent, view, position, id);
-	    }
-	});
+        listSettings.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                adapter.clickItem(parent, view, position, id);
+            }
+        });
 
-	/* Time picker */
-	this.timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
-	this.timePicker.setCurrentHour(alarm.getHour());
-	this.timePicker.setCurrentMinute(alarm.getMinute());
+        /* Time picker */
+        this.timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
+        this.timePicker.setCurrentHour(alarm.getHour());
+        this.timePicker.setCurrentMinute(alarm.getMinute());
 
-	return rootView;
+        return rootView;
     }
 
     class BtnDoneEvent implements OnClickListener {
-	@Override
-	public void onClick(View view) {
-	    alarm.setHour(timePicker.getCurrentHour());
-	    alarm.setMinute(timePicker.getCurrentMinute());
-	    alarm.setEnabled(true);
-	    adapter.Sync();
+        @Override
+        public void onClick(View view) {
+            alarm.setHour(timePicker.getCurrentHour());
+            alarm.setMinute(timePicker.getCurrentMinute());
+            alarm.setEnabled(true);
+            adapter.Sync();
 
-	    if (isUpdate) {
-		AlarmDbHandler.getInstance().updateAlarm(alarm);
-	    } else { /* create new */
-		AlarmDbHandler.getInstance().addAlarm(alarm);
-	    }
+            AlarmDbHandler dbHandler = AlarmDbHandler.getInstance(getActivity());
+            if (isUpdate) {
+                dbHandler.updateAlarm(alarm);
+            } else { /* create new */
+                dbHandler.addAlarm(alarm);
+            }
 
-	    AlarmServiceHelper.getInstance().updateAlert();
-	    //ash.setAlarm(alarm);
-	    //ash.updateAlert();
-	    getActivity().getFragmentManager().popBackStack();
+            AlarmServiceHelper.getInstance(getActivity()).updateAlert();
+            getActivity().getFragmentManager().popBackStack();
 
-	    ImageManager.downloadImage(getActivity());
-	}
+            ImageManager.downloadImage(getActivity());
+        }
     }
 }

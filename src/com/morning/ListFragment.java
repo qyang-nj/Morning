@@ -20,66 +20,69 @@ import com.morning.data.AlarmEntity;
 
 public class ListFragment extends Fragment {
     private CursorAdapter listAdapter;
+    private AlarmDbHandler dbHandler;
 
     @Override
     public void onResume() {
-	super.onResume();
-	if (listAdapter != null) {
-	    listAdapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-	}
+        super.onResume();
+        if (listAdapter != null) {
+            listAdapter.changeCursor(dbHandler.getCursorOfList());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        dbHandler = AlarmDbHandler.getInstance(getActivity());
 
-	final CursorAdapter adapter = new AlarmListCursorAdapter(getActivity(), AlarmDbHandler.getInstance()
-		.getCursorOfList(), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-	listAdapter = adapter;
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-	GridView listView = (GridView) rootView.findViewById(R.id.grid);
-	listView.setAdapter(adapter);
-	listView.setOnItemClickListener(new OnItemClickListener() {
-	    @Override
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		AlarmEntity alarm = (AlarmEntity) view.getTag();
-		alarm.setEnabled(!alarm.isEnabled());
-		alarm.commit();
-		AlarmServiceHelper.getInstance().updateAlert();
-		
-		adapter.changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-	    }
-	});
-	listView.setEmptyView(rootView.findViewById(R.id.empty_list_view));
+        final CursorAdapter adapter = new AlarmListCursorAdapter(getActivity(), dbHandler.getCursorOfList(),
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        listAdapter = adapter;
 
-	setHasOptionsMenu(true);
-	return rootView;
+        GridView listView = (GridView) rootView.findViewById(R.id.grid);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AlarmEntity alarm = (AlarmEntity) view.getTag();
+                alarm.setEnabled(!alarm.isEnabled());
+                dbHandler.addOrUpdateAlarm(alarm);
+                AlarmServiceHelper.getInstance(getActivity()).updateAlert();
+
+                adapter.changeCursor(dbHandler.getCursorOfList());
+            }
+        });
+        listView.setEmptyView(rootView.findViewById(R.id.empty_list_view));
+
+        setHasOptionsMenu(true);
+        return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.main, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-	int id = item.getItemId();
+        int id = item.getItemId();
 
-	/* Test Code */
-	if (id == R.id.test) {
-	    //AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
-	    //am.setAlarm(new AlarmEntity(), true);
-	    return true;
-	}
+        /* Test Code */
+        if (id == R.id.test) {
+            // AlarmServiceHelper am = new AlarmServiceHelper(getActivity());
+            // am.setAlarm(new AlarmEntity(), true);
+            return true;
+        }
 
-	if (id == R.id.action_add) {
-	    FragmentManager fm = getFragmentManager();
-	    FragmentTransaction transaction = fm.beginTransaction();
-	    transaction.replace(R.id.container, new SettingsFragment());
-	    transaction.addToBackStack("Settings");
-	    transaction.commit();
-	    return true;
-	}
-	return super.onOptionsItemSelected(item);
+        if (id == R.id.action_add) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.container, new SettingsFragment());
+            transaction.addToBackStack("Settings");
+            transaction.commit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

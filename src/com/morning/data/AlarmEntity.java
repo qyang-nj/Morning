@@ -141,13 +141,6 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
         return cal.getTimeInMillis();
     }
 
-    public void commit() {
-        if (id == null) {
-            return;
-        }
-        AlarmDbHandler.getInstance().updateAlarm(this);
-    }
-
     @Override
     public String toString() {
         Calendar cal = Calendar.getInstance();

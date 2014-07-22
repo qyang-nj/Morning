@@ -21,63 +21,63 @@ public class AlarmListCursorAdapter extends CursorAdapter {
     private LayoutInflater inflater;
 
     public AlarmListCursorAdapter(Context context, Cursor c, int flags) {
-	super(context, c, flags);
-	this.inflater = LayoutInflater.from(context);
+        super(context, c, flags);
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-	final AlarmEntity alarm = AlarmDbHandler.getAlarmFromCursor(cursor);
-	view.setTag(alarm);
+        final AlarmEntity alarm = AlarmDbHandler.getAlarmFromCursor(cursor);
+        view.setTag(alarm);
 
-	TextView time = (TextView) view.findViewById(R.id.lblTime);
-	time.setText(alarm.toString());
+        TextView time = (TextView) view.findViewById(R.id.lblTime);
+        time.setText(alarm.toString());
 
-	TextView title = (TextView) view.findViewById(R.id.lblName);
-	title.setText(alarm.getName());
+        TextView title = (TextView) view.findViewById(R.id.lblName);
+        title.setText(alarm.getName());
 
-	ImageView btnMore = (ImageView) view.findViewById(R.id.btnMore);
-	btnMore.setOnClickListener(new OnClickListener() {
+        ImageView btnMore = (ImageView) view.findViewById(R.id.btnMore);
+        btnMore.setOnClickListener(new OnClickListener() {
 
-	    @Override
-	    public void onClick(View v) {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
-		// set dialog message
-		alertDialogBuilder.setCancelable(true).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int id) {
-			if (!(context instanceof Activity)) {
-			    return;
-			}
+                // set dialog message
+                alertDialogBuilder.setCancelable(true).setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (!(context instanceof Activity)) {
+                            return;
+                        }
 
-			FragmentTransaction transaction = ((Activity) context).getFragmentManager().beginTransaction();
-			SettingsFragment fragment = new SettingsFragment();
-			fragment.setDefaultAlarm(alarm);
-			transaction.replace(R.id.container, fragment);
-			transaction.addToBackStack("Settings");
-			transaction.commit();
-		    }
-		}).setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int id) {
-			AlarmDbHandler.getInstance().delAlarm(alarm);
-			changeCursor(AlarmDbHandler.getInstance().getCursorOfList());
-		    }
-		});
+                        FragmentTransaction transaction = ((Activity) context).getFragmentManager().beginTransaction();
+                        SettingsFragment fragment = new SettingsFragment();
+                        fragment.setDefaultAlarm(alarm);
+                        transaction.replace(R.id.container, fragment);
+                        transaction.addToBackStack("Settings");
+                        transaction.commit();
+                    }
+                }).setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        AlarmDbHandler.getInstance(context).delAlarm(alarm);
+                        changeCursor(AlarmDbHandler.getInstance(context).getCursorOfList());
+                    }
+                });
 
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
-	    }
-	});
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
 
-	if (alarm.isEnabled()) {
-	    view.setBackgroundColor(context.getResources().getColor(R.color.main_color));
-	} else {
-	    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.itemborder));
-	}
+        if (alarm.isEnabled()) {
+            view.setBackgroundColor(context.getResources().getColor(R.color.main_color));
+        } else {
+            view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.itemborder));
+        }
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-	return inflater.inflate(R.layout.alarm_item, null);
+        return inflater.inflate(R.layout.alarm_item, null);
     }
 }
