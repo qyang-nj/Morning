@@ -15,8 +15,8 @@ Alpha
 
 ### Unfinished Task ###
 * Use configuration file to store settings
-* Reconstruct database
-* Optimize downloading pictures
+* Reconstruct database (Use ContentProvider)
+* Optimize downloading pictures (Use Service)
 
 
 ### Known Bugs ###
