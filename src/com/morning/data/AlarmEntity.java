@@ -1,11 +1,11 @@
 package com.morning.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.EnumSet;
-
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 
@@ -20,6 +20,15 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
             return new AlarmEntity(source);
         }
     };
+    private Integer id = null; /* If not in db, this should be null. */
+    private int hour;
+    private int minute;
+    private String name = "";
+    private String ringtone;
+    private int repeat = 0; /* Enum of RepeatOption */
+    private long createTime;
+    private boolean enabled = true;
+    private int snooze = 0; /* minutes */
 
     public AlarmEntity() {
         Calendar cal = Calendar.getInstance();
@@ -32,60 +41,60 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
         readFromParcel(in);
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Integer getId() {
         return this.id;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getHour() {
         return hour;
     }
 
-    public void setMinute(int minute) {
-        this.minute = minute;
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
     public int getMinute() {
         return minute;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMinute(int minute) {
+        this.minute = minute;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setRingtone(String sound) {
-        this.ringtone = sound;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRingtone() {
         return ringtone;
     }
 
-    public void setRepeat(int repeat) {
-        this.repeat = repeat;
+    public void setRingtone(String sound) {
+        this.ringtone = sound;
     }
 
     public int getRepeat() {
         return repeat;
     }
 
-    public void setCreateTime(long time) {
-        this.createTime = time;
+    public void setRepeat(int repeat) {
+        this.repeat = repeat;
     }
 
     public long getCreateTime() {
         return createTime;
+    }
+
+    public void setCreateTime(long time) {
+        this.createTime = time;
     }
 
     public boolean isEnabled() {
@@ -102,7 +111,7 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
 
     /**
      * Get the next alert time of this alarm.
-     * 
+     *
      * @return the absolute milliseconds
      */
     public long getNextTime() {
@@ -182,14 +191,4 @@ public class AlarmEntity implements Comparable<AlarmEntity>, Parcelable {
         createTime = in.readLong();
         enabled = in.readInt() > 0;
     }
-
-    private Integer id = null; /* If not in db, this should be null. */
-    private int hour;
-    private int minute;
-    private String name = "";
-    private String ringtone;
-    private int repeat = 0; /* Enum of RepeatOption */
-    private long createTime;
-    private boolean enabled = true;
-    private int snooze = 0; /* minutes */
 }

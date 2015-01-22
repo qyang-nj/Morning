@@ -1,12 +1,12 @@
 package com.morning;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+
+import java.io.IOException;
 
 public class Ringtone implements MediaPlayer.OnPreparedListener {
     private AudioManager audioManager;
@@ -17,10 +17,10 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
     private int streamType;
     private boolean isRingtoneEnable = false; /* For test, set as false. */
 
-    public Ringtone(Context context, Uri uri) {    
+    public Ringtone(Context context, Uri uri) {
         streamType = AudioManager.STREAM_ALARM;
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        
+
         userVolume = audioManager.getStreamVolume(streamType);
         audioManager.setStreamVolume(streamType, audioManager.getStreamMaxVolume(streamType),
                 AudioManager.FLAG_PLAY_SOUND);

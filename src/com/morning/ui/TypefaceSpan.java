@@ -24,11 +24,13 @@ import android.util.LruCache;
 
 /**
  * Style a {@link Spannable} with a custom {@link Typeface}.
- * 
+ *
  * @author Tristan Waddington
  */
 public class TypefaceSpan extends MetricAffectingSpan {
-      /** An <code>LruCache</code> for previously loaded typefaces. */
+    /**
+     * An <code>LruCache</code> for previously loaded typefaces.
+     */
     private static LruCache<String, Typeface> sTypefaceCache =
             new LruCache<String, Typeface>(12);
 
@@ -52,7 +54,7 @@ public class TypefaceSpan extends MetricAffectingSpan {
     @Override
     public void updateMeasureState(TextPaint p) {
         p.setTypeface(mTypeface);
-        
+
         // Note: This flag is required for proper typeface rendering
         p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
     }
@@ -60,7 +62,7 @@ public class TypefaceSpan extends MetricAffectingSpan {
     @Override
     public void updateDrawState(TextPaint tp) {
         tp.setTypeface(mTypeface);
-        
+
         // Note: This flag is required for proper typeface rendering
         tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
     }

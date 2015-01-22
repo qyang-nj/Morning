@@ -1,46 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.morning.ListFragment" >
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.morning.ListFragment">
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:scaleX="1.2"
-        android:scaleY="1.2" />
+    <TimePicker android:id="@+id/timePicker" android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:scaleX="1.2" android:scaleY="1.2" />
 
-    <ListView
-        android:id="@+id/listSettingItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/timePicker" />
+    <ListView android:id="@+id/listSettingItem" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_below="@id/timePicker" />
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/listSettingItem" >
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:layout_below="@id/listSettingItem">
 
-        <LinearLayout
-            android:id="@+id/buttonbar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
+        <LinearLayout android:id="@+id/buttonbar" android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+            <Button android:id="@+id/btnCancel" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="@android:string/cancel" />
 
-            <Button
-                android:id="@+id/btnDone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+            <Button android:id="@+id/btnDone" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="@string/done" />
         </LinearLayout>
     </RelativeLayout>

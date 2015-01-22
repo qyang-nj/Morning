@@ -24,11 +24,28 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 
     private static AlarmDbHandler instance;
 
+    private AlarmDbHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     public static AlarmDbHandler getInstance(Context context) {
         if (instance == null) {
             instance = new AlarmDbHandler(context);
         }
         return instance;
+    }
+
+    public static AlarmEntity getAlarmFromCursor(Cursor cursor) {
+        AlarmEntity alarm = new AlarmEntity();
+        alarm.setId(cursor.getInt(0));
+        alarm.setName(cursor.getString(1));
+        alarm.setHour(cursor.getInt(2));
+        alarm.setMinute(cursor.getInt(3));
+        alarm.setRepeat(cursor.getInt(4));
+        alarm.setEnabled(cursor.getInt(5) > 0);
+        alarm.setCreateTime(cursor.getLong(6));
+        alarm.setRingtone(cursor.getString(7));
+        return alarm;
     }
 
     @Override
@@ -78,7 +95,7 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
         values.put(KEY_RINGTONE, alarm.getRingtone());
         values.put(KEY_NEXT_TIME, alarm.getNextTime());
 
-        db.update(TABLE_NAME, values, KEY_ID + " = ?", new String[] { alarm.getId().toString() });
+        db.update(TABLE_NAME, values, KEY_ID + " = ?", new String[]{alarm.getId().toString()});
         db.close();
     }
 
@@ -96,21 +113,8 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, KEY_ID + " = ?", new String[] { alarm.getId().toString() });
+        db.delete(TABLE_NAME, KEY_ID + " = ?", new String[]{alarm.getId().toString()});
         db.close();
-    }
-
-    public static AlarmEntity getAlarmFromCursor(Cursor cursor) {
-        AlarmEntity alarm = new AlarmEntity();
-        alarm.setId(cursor.getInt(0));
-        alarm.setName(cursor.getString(1));
-        alarm.setHour(cursor.getInt(2));
-        alarm.setMinute(cursor.getInt(3));
-        alarm.setRepeat(cursor.getInt(4));
-        alarm.setEnabled(cursor.getInt(5) > 0);
-        alarm.setCreateTime(cursor.getLong(6));
-        alarm.setRingtone(cursor.getString(7));
-        return alarm;
     }
 
     public Cursor getCursorOfList() {
@@ -136,9 +140,5 @@ public class AlarmDbHandler extends SQLiteOpenHelper {
 
         db.close();
         return alarm;
-    }
-
-    private AlarmDbHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 }

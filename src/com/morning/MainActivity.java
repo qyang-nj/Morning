@@ -11,15 +11,10 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.view.Window;
 
-import com.morning.data.AlarmDbHandler;
 import com.morning.data.ImageManager;
 import com.morning.ui.TypefaceSpan;
 
 public class MainActivity extends Activity {
-
-    public static interface Callback {
-        void callback(Object... objects);
-    }
 
     private Callback selectRingtoneCallback;
 
@@ -68,5 +63,9 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    public static interface Callback {
+        void callback(Object... objects);
     }
 }

@@ -1,8 +1,5 @@
 package com.morning;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,7 +9,23 @@ import android.util.Log;
 import com.morning.data.AlarmDbHandler;
 import com.morning.data.AlarmEntity;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 public class AlarmServiceHelper {
+
+    private static AlarmServiceHelper ash;
+    private Context context;
+    private AlarmManager alarmManager;
+    private AlarmDbHandler dbHandler;
+    private long currentAlertTime = Long.MAX_VALUE;
+    private AlarmEntity currentAlarm;
+    private PendingIntent currentOperation;
+    private AlarmServiceHelper(Context context) {
+        this.context = context;
+        this.dbHandler = AlarmDbHandler.getInstance(context);
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
 
     public static AlarmServiceHelper getInstance(Context context) {
         if (ash == null) {
@@ -35,12 +48,6 @@ public class AlarmServiceHelper {
             cancel();
             set(alarm);
         }
-    }
-
-    private AlarmServiceHelper(Context context) {
-        this.context = context;
-        this.dbHandler = AlarmDbHandler.getInstance(context);
-        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
     private void set(AlarmEntity alarm) {
@@ -73,14 +80,4 @@ public class AlarmServiceHelper {
         currentAlertTime = Long.MAX_VALUE;
         currentAlarm = null;
     }
-
-    private static AlarmServiceHelper ash;
-
-    private Context context;
-    private AlarmManager alarmManager;
-    private AlarmDbHandler dbHandler;
-
-    private long currentAlertTime = Long.MAX_VALUE;
-    private AlarmEntity currentAlarm;
-    private PendingIntent currentOperation;
 }
