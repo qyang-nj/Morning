@@ -1,9 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.qyang.MainActivity">
-
-    <item android:id="@+id/action_add" android:icon="@drawable/ic_action_new"
-        android:showAsAction="ifRoom" android:title="@string/action_new" />
-
-    <item android:id="@+id/test" android:showAsAction="always" android:title="test" />
-</menu>
-<!-- From: file:/home/qing/Projects/SmartEyeglass/Morning/app/src/main/res/menu/main.xml -->

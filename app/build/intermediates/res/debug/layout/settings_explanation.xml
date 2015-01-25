@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lblContent"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="16sp"
-    android:typeface="monospace" /><!-- From: file:/home/qing/Projects/SmartEyeglass/Morning/app/src/main/res/layout/settings_explanation.xml -->
