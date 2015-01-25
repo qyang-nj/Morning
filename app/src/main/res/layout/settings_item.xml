@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:textSize="20sp"
+        android:typeface="monospace"
+        android:textAllCaps="true" />
+
+</merge>

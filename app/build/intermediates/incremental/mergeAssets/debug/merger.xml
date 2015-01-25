@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="21.0.0-rc1" >
+        <source path="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0-rc1/assets" />
+    </dataSet>
+    <dataSet config="main" >
+        <source path="/home/qing/Projects/SmartEyeglass/Morning/app/src/main/assets" >
+            <file
+                name="fonts/Amatic-Bold.ttf"
+                path="/home/qing/Projects/SmartEyeglass/Morning/app/src/main/assets/fonts/Amatic-Bold.ttf" />
+            <file
+                name="fonts/AmaticSC-Regular.ttf"
+                path="/home/qing/Projects/SmartEyeglass/Morning/app/src/main/assets/fonts/AmaticSC-Regular.ttf" />
+            <file
+                name="images/roy_goodman.png"
+                path="/home/qing/Projects/SmartEyeglass/Morning/app/src/main/assets/images/roy_goodman.png" />
+        </source>
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/home/qing/Projects/SmartEyeglass/Morning/app/src/debug/assets" />
+    </dataSet>
+
+</merger>

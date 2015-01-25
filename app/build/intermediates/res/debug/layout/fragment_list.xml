@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin" android:paddingTop="10dp"
+    tools:context="com.morning.ListFragment">
+
+    <GridView android:id="@+id/grid" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:gravity="center" android:horizontalSpacing="6dp"
+        android:numColumns="2" android:stretchMode="columnWidth" android:verticalSpacing="6dp" />
+
+    <TextView android:id="@+id/empty_list_view" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:gravity="center" android:text="@string/no_alarm"
+        android:textColor="@color/light_grey" android:textSize="20sp" android:visibility="gone" />
+
+</RelativeLayout><!-- From: file:/home/qing/Projects/SmartEyeglass/Morning/app/src/main/res/layout/fragment_list.xml -->

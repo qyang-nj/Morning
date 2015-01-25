@@ -1,0 +1,57 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    tools:context="com.morning.AlarmDetailActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scaleX="1.2"
+            android:scaleY="1.2" />
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey" />
+
+        <com.morning.ui.AlarmSettingItem
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:caption="Name">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage"
+                android:singleLine="true"
+                android:typeface="monospace" />
+        </com.morning.ui.AlarmSettingItem>
+
+        <com.morning.ui.AlarmSettingItem2Text
+            android:id="@+id/itemSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:caption="Sound"
+            custom:explanation="Default" />
+
+        <com.morning.ui.AlarmSettingItem2Text
+            android:id="@+id/itemRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:caption="Repeat"
+            custom:explanation="Never" />
+
+    </LinearLayout>
+</ScrollView><!-- From: file:/home/qing/Projects/SmartEyeglass/Morning/app/src/main/res/layout/activity_alarm_detail.xml -->

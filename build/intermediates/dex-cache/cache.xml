@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-1263cdf9aee83be5af11aa658833a553609d87f3.jar"
+        jar="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+    <item
+        dex="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/pre-dexed/debug/classes-b2398c9faadb5ce9116dcaf633af958407788016.jar"
+        jar="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+    <item
+        dex="/home/qing/Projects/SmartEyeglass/Morning/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-919ca491df47a35ae5a35e984f9307bbab548e59.jar"
+        jar="/install/android-studio/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+
+</pre-dex-items>
