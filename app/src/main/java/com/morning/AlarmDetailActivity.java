@@ -97,6 +97,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
 
             getHelper().getAlarmDao().createOrUpdate(mAlarm);
             Toast.makeText(this, R.string.prompt_alarm_created, Toast.LENGTH_SHORT).show();
+
             finish();
             return true;
         } else if (id == R.id.action_cancel) {

@@ -5,6 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Qing on 1/25/15.
@@ -54,5 +56,59 @@ public class Alarm {
         cal.set(Calendar.MINUTE, minute);
         String str = DateFormat.getTimeInstance(DateFormat.SHORT).format(cal.getTime());
         return str;
+    }
+
+    /**
+     * Get the next alert time of this alarm.
+     *
+     * @return the absolute milliseconds
+     */
+    public long getNextTime() {
+
+        if (!this.enabled) {
+            return Long.MAX_VALUE;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, this.hour);
+        cal.set(Calendar.MINUTE, this.minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        if (this.repeat == 0) {
+            if (cal.compareTo(Calendar.getInstance()) == -1) { /* Before */
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+            }
+        } else {
+            EnumSet<RepeatOption> options = RepeatOption.getSetFromValue(this.repeat);
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            int dayCount = 0;
+            for (; dayCount < 7; ++dayCount) {
+                int day = ((dayOfWeek - 1) + dayCount) % 7 + 1;
+                if (options.contains(RepeatOption.fromCalendar(day))) {
+                    break;
+                }
+            }
+            cal.add(Calendar.DAY_OF_YEAR, dayCount);
+        }
+        return cal.getTimeInMillis();
+    }
+
+    public static Alarm findEarliestAlarm(List<Alarm> alarms) {
+        Alarm earliestAlarm = null;
+        long earliestTime;
+
+        if (alarms.size() > 0) {
+            earliestAlarm = alarms.get(0);
+            earliestTime = earliestAlarm.getNextTime();
+            for (int i = 1; i < alarms.size(); ++i) {
+                long thisTime = alarms.get(i).getNextTime();
+                if (earliestTime > thisTime) {
+                    earliestAlarm = alarms.get(i);
+                    earliestTime = thisTime;
+                }
+            }
+        }
+        return earliestAlarm;
     }
 }

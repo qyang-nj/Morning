@@ -11,42 +11,50 @@ import android.widget.GridView;
 
 import com.morning.model.Alarm;
 
+import java.util.List;
+
 public class AlarmListActivity extends AlarmAbstractActivity {
     private AlarmListAdapter mAdapter;
+    private GridView mList;
+    private List<Alarm> mAlarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(Constants.TAG, "SDK Version: " + android.os.Build.VERSION.SDK_INT);
+        Log.i(getClass().getName(), "SDK Version: " + android.os.Build.VERSION.SDK_INT);
 
         setContentView(R.layout.activity_alarm_list);
 
-        final AlarmListAdapter adapter = new AlarmListAdapter(this, getHelper().getAlarmDao().queryForAll());
-        mAdapter = adapter;
-
-        GridView list = (GridView) findViewById(R.id.grid);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Alarm alarm = (Alarm) mAdapter.getItem(position);
-                alarm.enabled = !alarm.enabled;
-                getHelper().getAlarmDao().update(alarm);
-
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-        list.setEmptyView(findViewById(R.id.empty_list_view));
+        mList = (GridView) findViewById(R.id.grid);
+        mList.setEmptyView(findViewById(R.id.empty_list_view));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (mAdapter != null) {
-            mAdapter.setAlarms(getHelper().getAlarmDao().queryForAll());
+        mAlarms = getHelper().getAlarmDao().queryForAll();
+
+        if (mAdapter == null) {
+            mAdapter = new AlarmListAdapter(this, mAlarms);
+            mList.setAdapter(mAdapter);
+            mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Alarm alarm = (Alarm) mAdapter.getItem(position);
+                    alarm.enabled = !alarm.enabled;
+                    getHelper().getAlarmDao().update(alarm);
+
+                    mAdapter.notifyDataSetChanged();
+                    AlarmService.update(AlarmListActivity.this, mAlarms);
+                }
+            });
+        } else {
+            mAdapter.setAlarms(mAlarms);
             mAdapter.notifyDataSetChanged();
         }
+
+        AlarmService.update(this, mAlarms);
     }
 
     @Override

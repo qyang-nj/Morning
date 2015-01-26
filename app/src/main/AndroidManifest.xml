@@ -56,6 +56,7 @@
             android:name=".AlarmRingingActivity"
             android:label="@string/title_activity_alarm_ringing" >
         </activity>
+        <service android:name=".AlarmService"/>
     </application>
 
 </manifest>
