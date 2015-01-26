@@ -1,4 +1,4 @@
-package com.morning.data;
+package com.morning.model;
 
 import java.util.Calendar;
 import java.util.EnumSet;

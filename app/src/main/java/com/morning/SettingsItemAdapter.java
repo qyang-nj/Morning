@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.morning.MainActivity.Callback;
 import com.morning.RepeatDialogFragment.NoticeListener;
 import com.morning.data.AlarmEntity;
-import com.morning.data.RepeatOption;
+import com.morning.model.RepeatOption;
 
 import java.util.Arrays;
 import java.util.EnumSet;

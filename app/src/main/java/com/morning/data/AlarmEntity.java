@@ -3,6 +3,8 @@ package com.morning.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.morning.model.RepeatOption;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.EnumSet;

@@ -12,7 +12,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 /**
- * Created by qing on 1/25/15.
+ * Created by Qing on 1/25/15.
  */
 public class AlarmDbHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "morning.db";

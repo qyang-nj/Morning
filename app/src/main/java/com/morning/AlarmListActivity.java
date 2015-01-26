@@ -40,6 +40,16 @@ public class AlarmListActivity extends AlarmAbstractActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mAdapter != null) {
+            mAdapter.setAlarms(getHelper().getAlarmDao().queryForAll());
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.alarm_list, menu);
         return true;
@@ -50,6 +60,7 @@ public class AlarmListActivity extends AlarmAbstractActivity {
         int id = item.getItemId();
         if (id == R.id.action_add) {
             Intent intent = new Intent(this, AlarmDetailActivity.class);
+            intent.putExtra(Alarm.KEY_ALARM_ID, -1);
             startActivity(intent);
             return true;
         }

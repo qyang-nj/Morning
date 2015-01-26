@@ -7,13 +7,14 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 /**
- * Created by qing on 1/25/15.
+ * Created by Qing on 1/25/15.
  */
 
 @DatabaseTable(tableName = "alarm")
 public class Alarm {
+    public static final String KEY_ALARM_ID = "KEY_ALARM_ID";
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     public int id;
 
     @DatabaseField(canBeNull = false)
@@ -39,6 +40,11 @@ public class Alarm {
 
     public Alarm() {
         /* ORMLite needs a no-arg constructor */
+        id = -1;
+
+        Calendar c = Calendar.getInstance();
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
     }
 
     @Override
