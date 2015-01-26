@@ -17,5 +17,9 @@
     <string name="title_activity_alarm_detail">AlarmDetailActivity</string>
     <string name="title_activity_alarm_list">AlarmListActivity</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_alarm_ringing">AlarmRingingActivity</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="prompt_alarm_created">Alarm created!</string>
+    <string name="warning_invalid_ringtone">Please select a valid music file.</string>
 
 </resources>

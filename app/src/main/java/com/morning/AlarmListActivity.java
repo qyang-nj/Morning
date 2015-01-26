@@ -63,6 +63,10 @@ public class AlarmListActivity extends AlarmAbstractActivity {
             intent.putExtra(Alarm.KEY_ALARM_ID, -1);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_test) {
+            Intent intent = new Intent(this, AlarmRingingActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.morning.model.RepeatOption;
 import com.morning.model.Alarm;
@@ -46,13 +47,13 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         mEtName.setText(mAlarm.name);
         
         final AlarmSettingItem2Text itemSound = (AlarmSettingItem2Text) findViewById(R.id.itemSound);
-        Uri u = (mAlarm.ringtone == null ? null : Uri.parse(mAlarm.ringtone));
-        itemSound.setExplanation(u == null ? "" : RingtoneManager.getRingtone(this, u).getTitle(this));
+        Uri u = (mAlarm.ringtone == null ? RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM) : Uri.parse(mAlarm.ringtone));
+        itemSound.setExplanation(u == null ? "Default" : RingtoneManager.getRingtone(this, u).getTitle(this));
         itemSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
                 startActivityForResult(intent, Constants.REQUEST_SELET_RINGTONE);
@@ -95,6 +96,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
             mAlarm.enabled = true;
 
             getHelper().getAlarmDao().createOrUpdate(mAlarm);
+            Toast.makeText(this, R.string.prompt_alarm_created, Toast.LENGTH_SHORT).show();
             finish();
             return true;
         } else if (id == R.id.action_cancel) {
@@ -111,7 +113,11 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 mAlarm.ringtone = uri.toString();
                 android.media.Ringtone rt = RingtoneManager.getRingtone(this, uri);
-                mSound.setExplanation(rt.getTitle(this));
+                if (rt != null) {
+                    mSound.setExplanation(rt.getTitle(this));
+                } else {
+                    Toast.makeText(this, R.string.warning_invalid_ringtone, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
