@@ -1,18 +1,19 @@
 package com.morning;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Window;
 
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.morning.model.AlarmDbHelper;
 import com.morning.ui.TypefaceSpan;
 
 /**
  * Created by qing on 1/23/15.
  */
-public class AlarmAbstractActivity extends Activity {
+public class AlarmAbstractActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
