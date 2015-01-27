@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.morning.model.Alarm;
 import com.morning.model.AlarmDbHelper;
 
@@ -76,6 +77,12 @@ public class AlarmService extends IntentService {
             return;
         }
         createAlarm(context, Alarm.findEarliestAlarm(alarms));
+    }
+
+    public static void update(Context context) {
+        OrmLiteBaseActivity<AlarmDbHelper> activity = (OrmLiteBaseActivity<AlarmDbHelper>) context;
+        List<Alarm> alarms = activity.getHelper().getAlarmDao().queryForAll();
+        update(context, alarms);
     }
 
     private AlarmDbHelper getHelper() {
