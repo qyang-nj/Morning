@@ -33,7 +33,7 @@ public class AlertActivity extends Activity {
         public boolean onTouch(View view, MotionEvent motionEvent) {
             int viewId = view.getId();
             if (viewId == R.id.btn_snooze) {
-                alarm.setSnooze(Constants.SNOOZE_TIME);
+                alarm.setSnooze(Constants.DEFAULT_SNOOZE_TIME);
             } else if (viewId == R.id.btn_off) {
 
             }

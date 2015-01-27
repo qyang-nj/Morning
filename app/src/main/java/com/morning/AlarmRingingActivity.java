@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.morning.model.Alarm;
@@ -21,11 +21,14 @@ import java.util.Calendar;
 
 
 public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
-    private static final int WAKELOCK_TIMEOUT = 60 * 1000;
+    private static final int RINGING_EXPIRED_TIMEOUT = 60 * 1000;
 
     private PowerManager.WakeLock mWakeLock;
     private Ringtone mRingtone;
     private Alarm mAlarm;
+
+    private Handler mAutoSnoozeHandler;
+    private Runnable mAutoSnoozeCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         findViewById(R.id.btn_snooze).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
+                Toast.makeText(AlarmRingingActivity.this, "Snoozed for 10 minitues", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -72,7 +77,18 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
                 }
             }
         };
-        new Handler().postDelayed(releaseWakelock, WAKELOCK_TIMEOUT);
+        new Handler().postDelayed(releaseWakelock, RINGING_EXPIRED_TIMEOUT);
+
+        /* Set auto snooze */
+        mAutoSnoozeCallback = new Runnable() {
+            @Override
+            public void run() {
+                AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
+                finish();
+            }
+        };
+        mAutoSnoozeHandler = new Handler();
+        mAutoSnoozeHandler.postDelayed(mAutoSnoozeCallback, RINGING_EXPIRED_TIMEOUT);
     }
 
     @Override
@@ -112,6 +128,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
+        }
+
+        if (mAutoSnoozeHandler != null) {
+            mAutoSnoozeHandler.removeCallbacks(mAutoSnoozeCallback);
         }
 
         /* Saving data should be in onPause(), because other activity's onResume() may use this data. */
