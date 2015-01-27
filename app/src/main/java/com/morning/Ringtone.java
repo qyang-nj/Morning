@@ -9,22 +9,12 @@ import android.util.Log;
 import java.io.IOException;
 
 public class Ringtone implements MediaPlayer.OnPreparedListener {
-    private AudioManager audioManager;
     private MediaPlayer audioPlayer;
-    private int userVolume;
     private boolean isPrepared = false;
     private boolean isPlayed = false;
-    private int streamType;
     private boolean isRingtoneEnable = true; /* For test, set as false. */
 
     public Ringtone(Context context, Uri uri) {
-        streamType = AudioManager.STREAM_ALARM;
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-
-        userVolume = audioManager.getStreamVolume(streamType);
-        audioManager.setStreamVolume(streamType, audioManager.getStreamMaxVolume(streamType),
-                AudioManager.FLAG_PLAY_SOUND);
-
         audioPlayer = new MediaPlayer();
         try {
             audioPlayer.setDataSource(context, uri);
@@ -37,7 +27,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
         } catch (IOException e) {
             Log.e(Constants.TAG, e.getMessage());
         }
-        audioPlayer.setAudioStreamType(streamType);
+        audioPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         audioPlayer.setLooping(true);
         audioPlayer.setOnPreparedListener(this);
         audioPlayer.prepareAsync();
@@ -52,7 +42,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
     }
 
     public void play() {
-        if (!isRingtoneEnable) {
+        if (!isRingtoneEnable || audioPlayer.isPlaying()) {
             return;
         }
 
@@ -67,7 +57,6 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
         if (audioPlayer != null && audioPlayer.isPlaying()) {
             audioPlayer.stop();
             audioPlayer.reset();
-            audioManager.setStreamVolume(streamType, userVolume, AudioManager.FLAG_PLAY_SOUND);
             isPrepared = false;
         }
     }
