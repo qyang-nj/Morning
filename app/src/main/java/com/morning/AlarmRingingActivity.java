@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
+import android.text.method.CharacterPickerDialog;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -41,6 +43,20 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         TextView txtTime = (TextView) findViewById(R.id.txt_time);
         Calendar cal = Calendar.getInstance();
         txtTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
+
+        findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        findViewById(R.id.btn_snooze).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         /* Ensure wakelock release */
         Runnable releaseWakelock = new Runnable() {

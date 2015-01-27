@@ -50,7 +50,7 @@
             android:text="@string/snooze" />
 
         <Button
-            android:id="@+id/btn_off"
+            android:id="@+id/btn_dismiss"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

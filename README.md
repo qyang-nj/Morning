@@ -7,7 +7,6 @@ Morning!
 Alpha
 
 ### Unimplemented Features ###
-* Set alarm after reboot
 * Snooze
 * Set alert timeout, automatically snooze
 * Cancel a snoozed alarm (Undefined)
