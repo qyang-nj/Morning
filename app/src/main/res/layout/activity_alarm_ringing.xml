@@ -16,11 +16,11 @@
         android:text="09:00 AM" />
 
     <ImageView
-        android:id="@+id/imgShown"
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:src="@drawable/brooklyn"
+        android:src="@drawable/logo"
         android:contentDescription="@null" />
 
     <LinearLayout

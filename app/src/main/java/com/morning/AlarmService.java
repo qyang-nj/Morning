@@ -105,7 +105,7 @@ public class AlarmService extends IntentService {
 
         Alarm alarm = getHelper().getAlarmDao().queryForId(alarmId);
 
-        Intent i = new Intent(this, AlarmReciever.class);
+        Intent i = new Intent(this, AlarmReceiver.class);
         i.putExtra(Alarm.KEY_ALARM_ID, alarmId);
 
         if (CREATE.equals(action)) {
@@ -113,7 +113,7 @@ public class AlarmService extends IntentService {
             long time  = alarm.getNextTime();
             setAlarm(pi, time);
         } else if (SNOOZE.equals(action)) {
-            PendingIntent pi = PendingIntent.getBroadcast(this, alarmId, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
             long time = new Date().getTime() + Constants.DEFAULT_SNOOZE_TIME * 60 * 1000;
             setAlarm(pi, time);
         } else if (CANCEL.equals(action)) {

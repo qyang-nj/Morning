@@ -3,6 +3,7 @@ package com.morning;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -10,14 +11,18 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.morning.model.Alarm;
 import com.morning.model.AlarmDbHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+
+import retrofit.RestAdapter;
 
 
 public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
@@ -43,7 +48,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         }
         getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 
-        /* Fetch alarm */
+        /* Fetch alarm from db */
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
         mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
         if (mAlarm == null) {
@@ -70,6 +75,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
                 finish();
             }
         });
+
+        /* Fetch image from server */
+        populateImageView();
 
         /* Ensure wakelock release */
         Runnable releaseWakelock = new Runnable() {
@@ -156,5 +164,28 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
         mRingtone.stop();
         AlarmService.update(this);
+    }
+
+    private void populateImageView() {
+        new AsyncTask<Handler, Void, Void>() {
+            @Override
+            protected Void doInBackground(Handler... handlers) {
+                try {
+                    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(AlarmRingingImage.BASE_URL).build();
+                    AlarmRingingImage.ImageGetter image = restAdapter.create(AlarmRingingImage.ImageGetter.class);
+                    final String imageUrl = image.getImageUrl().url;
+                    handlers[0].post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
+                                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), e.getMessage());
+                }
+                return null;
+            }
+        }.execute(new Handler(), null, null);
     }
 }
