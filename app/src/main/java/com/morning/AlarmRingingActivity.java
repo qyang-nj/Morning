@@ -35,6 +35,14 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ringing);
 
+        /* Hide status bar and navigation(home & back) */
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
+            uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+
         /* Fetch alarm */
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
         mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
