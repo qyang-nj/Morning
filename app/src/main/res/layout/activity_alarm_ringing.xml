@@ -33,29 +33,28 @@
 
     <LinearLayout
         android:id="@+id/fullscreen_content_controls"
-        style="?metaButtonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/black_overlay"
         android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:background="@color/light_grey"
+        style="?android:attr/buttonBarStyle">
 
         <Button
             android:id="@+id/btn_snooze"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/snooze" />
+            android:text="@string/snooze"
+            style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/btn_dismiss"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/dismiss" />
+            android:text="@string/dismiss"
+            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
 </LinearLayout>
