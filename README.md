@@ -1,19 +1,6 @@
 Morning!
 ========
 
-"Morning!" is a android-based alarm, showing cute or inspiring pictures.
+**Morning!** is a simple Android-based alarm, showing cute or inspiring pictures when ringing.
 
-### Version ###
-Alpha
-
-### Unimplemented Features ###
-* Cancel a snoozed alarm (Undefined)
-
-
-### Unfinished Task ###
-* Use configuration file to store settings
-* Optimize downloading pictures (Use Service)
-
-
-### Known Bugs ###
-
+![Logo](https://raw.githubusercontent.com/roovent/Morning/master/app/src/main/res/drawable/logo.png)
