@@ -19,27 +19,27 @@ import java.util.List;
  * Created by Qing on 1/25/15.
  */
 public class AlarmListAdapter extends BaseAdapter {
-    private List<Alarm> alarms;
+    private List<Alarm> mAlarms;
     private Context mContext;
 
     public AlarmListAdapter(Context context, List<Alarm> alarms) {
-        this.alarms = alarms;
+        this.mAlarms = alarms;
         mContext = context;
     }
 
     @Override
     public int getCount() {
-        return alarms.size();
+        return mAlarms.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return alarms.get(position);
+        return mAlarms.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return alarms.get(position).id;
+        return mAlarms.get(position).id;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AlarmListAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        final Alarm alarm = alarms.get(position);
+        final Alarm alarm = mAlarms.get(position);
         vh.time.setText(alarm.toString());
         vh.title.setText(alarm.name);
 
@@ -81,8 +81,9 @@ public class AlarmListAdapter extends BaseAdapter {
                             AlarmListActivity activity = (AlarmListActivity) mContext;
                             activity.getHelper().getAlarmDao().delete(alarm);
 
-                            alarms.remove(alarm);
+                            mAlarms.remove(alarm);
                             notifyDataSetChanged();
+                            AlarmService.update(mContext, mAlarms);
                         }
                     }
                 });
@@ -102,7 +103,7 @@ public class AlarmListAdapter extends BaseAdapter {
     }
 
     public void setAlarms(List<Alarm> alarms) {
-        this.alarms = alarms;
+        mAlarms = alarms;
     }
 
     private class ViewHolder {

@@ -29,6 +29,9 @@ public class AlarmService extends IntentService {
     private AlarmDbHelper databaseHelper = null;
 
     public static void createAlarm(Context context, Alarm alarm) {
+        if (alarm == null) {
+            return;
+        }
         Intent i = new Intent(context, AlarmService.class);
         i.setAction(AlarmService.CREATE);
         i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
@@ -133,8 +136,7 @@ public class AlarmService extends IntentService {
             } else {
                 am.setExact(AlarmManager.RTC_WAKEUP, time, pi);
             }
+            Log.i(getClass().getName(), "Set alarm: " + DateFormat.getDateTimeInstance().format(new Date(time)));
         }
-
-        Log.i(getClass().getName(), "Set alarm: " + DateFormat.getDateTimeInstance().format(new Date(time)));
     }
 }
