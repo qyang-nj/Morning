@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class AlarmDbHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "morning.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private RuntimeExceptionDao<Alarm, Integer> alarmDao = null;
 
@@ -36,6 +36,7 @@ public class AlarmDbHelper extends OrmLiteSqliteOpenHelper {
 
         Alarm a = new Alarm();
         a.name = "Test";
+        a.enabled = false;
         getAlarmDao().create(a);
     }
 

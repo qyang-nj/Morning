@@ -59,7 +59,7 @@ public class AlarmListAdapter extends BaseAdapter {
         }
 
         final Alarm alarm = mAlarms.get(position);
-        vh.time.setText(alarm.toString());
+        vh.time.setText(alarm.getTimeString());
         vh.title.setText(alarm.name);
 
         vh.btnMore.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,7 @@
 package com.morning.model;
 
+import android.util.SparseIntArray;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -51,6 +53,11 @@ public class Alarm {
 
     @Override
     public String toString() {
+        return String.format("[Alarm(%d)] %02d:%02d {%x}", id, hour, minute, repeat);
+    }
+
+
+    public String getTimeString() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
@@ -81,15 +88,16 @@ public class Alarm {
             }
         } else {
             EnumSet<RepeatOption> options = RepeatOption.getSetFromValue(this.repeat);
-            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            int dayOfWeek = calendar2Ordinal.get(cal.get(Calendar.DAY_OF_WEEK));
+            int offset = (cal.compareTo(Calendar.getInstance()) == -1) ? 1 : 0;
             int dayCount = 0;
             for (; dayCount < 7; ++dayCount) {
-                int day = ((dayOfWeek - 1) + dayCount) % 7 + 1;
-                if (options.contains(RepeatOption.fromCalendar(day))) {
+                int day = (dayOfWeek + dayCount + offset) % 7;
+                if (options.contains(RepeatOption.fromCalendar(ordinal2Calendar[day]))) {
                     break;
                 }
             }
-            cal.add(Calendar.DAY_OF_YEAR, dayCount);
+            cal.add(Calendar.DAY_OF_YEAR, dayCount + offset);
         }
         return cal.getTimeInMillis();
     }
@@ -110,5 +118,20 @@ public class Alarm {
             }
         }
         return earliestAlarm;
+    }
+
+    private static SparseIntArray calendar2Ordinal;
+    private static int[] ordinal2Calendar = new int[]{Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
+            Calendar.WEDNESDAY, Calendar.TUESDAY, Calendar.FRIDAY, Calendar.SATURDAY};
+
+    static {
+        calendar2Ordinal = new SparseIntArray();
+        calendar2Ordinal.put(Calendar.SUNDAY, 0);
+        calendar2Ordinal.put(Calendar.MONDAY, 1);
+        calendar2Ordinal.put(Calendar.TUESDAY, 2);
+        calendar2Ordinal.put(Calendar.WEDNESDAY, 3);
+        calendar2Ordinal.put(Calendar.TUESDAY, 4);
+        calendar2Ordinal.put(Calendar.FRIDAY, 5);
+        calendar2Ordinal.put(Calendar.SATURDAY, 6);
     }
 }

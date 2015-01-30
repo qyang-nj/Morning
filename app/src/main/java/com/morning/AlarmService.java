@@ -115,10 +115,12 @@ public class AlarmService extends IntentService {
             PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
             long time  = alarm.getNextTime();
             setAlarm(pi, time);
+            Log.i(getClass().getName(), alarm.toString());
         } else if (SNOOZE.equals(action)) {
             PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
             long time = new Date().getTime() + Constants.DEFAULT_SNOOZE_TIME * 60 * 1000;
             setAlarm(pi, time);
+            Log.i(getClass().getName(), alarm.toString());
         } else if (CANCEL.equals(action)) {
             PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -134,9 +136,10 @@ public class AlarmService extends IntentService {
             if (android.os.Build.VERSION.SDK_INT < 19) {
                 am.set(AlarmManager.RTC_WAKEUP, time, pi);
             } else {
+                /* If the stated trigger time is in the past, the alarm will be triggered immediately. */
                 am.setExact(AlarmManager.RTC_WAKEUP, time, pi);
             }
-            Log.i(getClass().getName(), "Set alarm: " + DateFormat.getDateTimeInstance().format(new Date(time)));
+            Log.i(getClass().getName(), "--- Set alarm: " + DateFormat.getDateTimeInstance().format(new Date(time)));
         }
     }
 }

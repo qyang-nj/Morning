@@ -12,7 +12,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
     private MediaPlayer audioPlayer;
     private boolean isPrepared = false;
     private boolean isPlayed = false;
-    private boolean isRingtoneEnable = false; /* For test, set as false. */
+    private boolean isRingtoneEnable = true; /* For test, set as false. */
 
     public Ringtone(Context context, Uri uri) {
         audioPlayer = new MediaPlayer();
