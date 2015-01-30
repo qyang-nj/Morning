@@ -2,7 +2,7 @@ package com.morning;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.*;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.morning.model.RepeatOption;
 import com.morning.model.Alarm;
+import com.morning.model.RepeatOption;
 import com.morning.ui.AlarmSettingItem2Text;
 
 import java.util.EnumSet;
@@ -45,7 +45,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
 
         mEtName = (EditText) findViewById(R.id.name);
         mEtName.setText(mAlarm.name);
-        
+
         final AlarmSettingItem2Text itemSound = (AlarmSettingItem2Text) findViewById(R.id.itemSound);
         Uri u = (mAlarm.ringtone == null ? RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM) : Uri.parse(mAlarm.ringtone));
         itemSound.setExplanation(u == null ? "Default" : RingtoneManager.getRingtone(this, u).getTitle(this));
