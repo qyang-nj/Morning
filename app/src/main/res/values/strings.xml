@@ -2,22 +2,16 @@
 <resources>
 
     <string name="app_name">Morning!</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_new">New</string>
     <string name="done">DONE</string>
     <string name="name">NAME</string>
     <string name="sound">SOUND</string>
     <string name="repeat">REPEAT</string>
-    <string name="title_activity_time_out">TimeOutActivity</string>
     <string name="ringtones">Ringtones</string>
     <string name="snooze">Snooze</string>
-    <string name="off">Off</string>
     <string name="no_alarm">NO ALARMS</string>
-    <string name="title_activity_alarm_detail">AlarmDetailActivity</string>
-    <string name="title_activity_alarm_list">AlarmListActivity</string>
     <string name="cancel">Cancel</string>
-    <string name="title_activity_alarm_ringing">AlarmRingingActivity</string>
     <string name="dismiss">Dismiss</string>
     <string name="prompt_alarm_created">Alarm created!</string>
     <string name="warning_invalid_ringtone">Please select a valid music file.</string>

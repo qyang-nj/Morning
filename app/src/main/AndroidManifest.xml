@@ -32,11 +32,11 @@
 
         <activity
             android:name=".AlarmDetailActivity"
-            android:label="@string/title_activity_alarm_detail" />
+            android:label="@string/app_name" />
 
         <activity
             android:name=".AlarmRingingActivity"
-            android:label="@string/title_activity_alarm_ringing" />
+            android:label="@string/app_name" />
 
         <receiver android:name=".AlarmSetter">
             <intent-filter>

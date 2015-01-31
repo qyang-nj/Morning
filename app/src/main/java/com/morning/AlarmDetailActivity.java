@@ -56,7 +56,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-                startActivityForResult(intent, Constants.REQUEST_SELET_RINGTONE);
+                startActivityForResult(intent, Constants.REQUEST_SELECT_RINGTONE);
             }
         });
         mSound = itemSound;
@@ -110,7 +110,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Constants.REQUEST_SELET_RINGTONE) {
+            if (requestCode == Constants.REQUEST_SELECT_RINGTONE) {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 mAlarm.ringtone = uri.toString();
                 android.media.Ringtone rt = RingtoneManager.getRingtone(this, uri);

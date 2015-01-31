@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.morning.ui.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/itemborder" android:paddingBottom="5dp" android:paddingTop="25dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/itemborder"
+    android:paddingBottom="5dp"
+    android:paddingTop="25dp">
 
-    <TextView android:id="@+id/lblTime" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:gravity="center"
-        android:text="@string/hello_world" android:textColor="#666666" android:textSize="28sp" />
+    <TextView
+        android:id="@+id/lblTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#666666"
+        android:textSize="28sp" />
 
-    <TextView android:id="@+id/lblName" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_below="@id/lblTime"
-        android:layout_marginTop="8dp" android:gravity="center" android:text="@string/hello_world"
-        android:textColor="#666666" android:textSize="16sp" />
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lblTime"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="#666666"
+        android:textSize="16sp" />
 
-    <ImageView android:id="@+id/btnMore" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" android:focusable="false"
-        android:focusableInTouchMode="false" android:src="@drawable/ic_more" />
+    <ImageView
+        android:id="@+id/btnMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/ic_more" />
 
 </com.morning.ui.SquareRelativeLayout>

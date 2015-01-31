@@ -7,6 +7,7 @@ import retrofit.http.GET;
  */
 
 public class AlarmRingingImage {
+    /* "http://floating-earth-4908.herokuapp.com/clock_images/random_image_url" */
     public static final String BASE_URL = "http://floating-earth-4908.herokuapp.com";
 
     public interface ImageGetter {
