@@ -53,16 +53,14 @@ public class Alarm {
 
     @Override
     public String toString() {
-        return String.format("[Alarm(%d)] %02d:%02d {%x}", id, hour, minute, repeat);
+        return String.format("Alarm(%d) %02d:%02d {%x}", id, hour, minute, repeat);
     }
-
 
     public String getTimeString() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
-        String str = DateFormat.getTimeInstance(DateFormat.SHORT).format(cal.getTime());
-        return str;
+        return DateFormat.getTimeInstance(DateFormat.SHORT).format(cal.getTime());
     }
 
     /**

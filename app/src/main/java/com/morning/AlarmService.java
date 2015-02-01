@@ -112,15 +112,15 @@ public class AlarmService extends IntentService {
         i.putExtra(Alarm.KEY_ALARM_ID, alarmId);
 
         if (CREATE.equals(action)) {
+            Log.i(getClass().getName(), "[Alarm creating] " + alarm.toString());
             PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            long time  = alarm.getNextTime();
+            long time = alarm.getNextTime();
             setAlarm(pi, time);
-            Log.i(getClass().getName(), alarm.toString());
         } else if (SNOOZE.equals(action)) {
+            Log.i(getClass().getName(), "[Alarm snoozing] " + alarm.toString());
             PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
             long time = new Date().getTime() + Constants.DEFAULT_SNOOZE_TIME * 60 * 1000;
             setAlarm(pi, time);
-            Log.i(getClass().getName(), alarm.toString());
         } else if (CANCEL.equals(action)) {
             PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -132,14 +132,22 @@ public class AlarmService extends IntentService {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (time == Long.MAX_VALUE) {
             am.cancel(pi);
+            Log.i(getClass().getName(), "[Alarm canceled]");
         } else {
+            /* Schedule image to be downloaded 1 min prior to ringing */
+            Intent intentDownloading = new Intent(this, AlarmImageService.class);
+            PendingIntent piDownloading = PendingIntent.getService(this, 0, intentDownloading, PendingIntent.FLAG_UPDATE_CURRENT);
+            long timeDownloading = time - 60 * 1000;
+
             if (android.os.Build.VERSION.SDK_INT < 19) {
                 am.set(AlarmManager.RTC_WAKEUP, time, pi);
+                am.set(AlarmManager.RTC_WAKEUP, timeDownloading, piDownloading);
             } else {
                 /* If the stated trigger time is in the past, the alarm will be triggered immediately. */
                 am.setExact(AlarmManager.RTC_WAKEUP, time, pi);
+                am.setExact(AlarmManager.RTC_WAKEUP, timeDownloading, piDownloading);
             }
-            Log.i(getClass().getName(), "--- Set alarm: " + DateFormat.getDateTimeInstance().format(new Date(time)));
+            Log.i(getClass().getName(), "[Alarm scheduled] " + DateFormat.getDateTimeInstance().format(new Date(time)));
         }
     }
 }

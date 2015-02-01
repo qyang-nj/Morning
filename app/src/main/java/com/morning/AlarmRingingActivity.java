@@ -3,7 +3,6 @@ package com.morning;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -21,8 +20,6 @@ import com.morning.model.AlarmDbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
-
-import retrofit.RestAdapter;
 
 
 public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
@@ -167,25 +164,11 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     }
 
     private void populateImageView() {
-        new AsyncTask<Handler, Void, Void>() {
-            @Override
-            protected Void doInBackground(Handler... handlers) {
-                try {
-                    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(AlarmRingingImage.BASE_URL).build();
-                    AlarmRingingImage.ImageGetter image = restAdapter.create(AlarmRingingImage.ImageGetter.class);
-                    final String imageUrl = image.getImageUrl().url;
-                    handlers[0].post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
-                                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.e(getClass().getName(), e.getMessage());
-                }
-                return null;
-            }
-        }.execute(new Handler(), null, null);
+        String imageUrl = getSharedPreferences(AlarmImageService.PREFERENCE_IMAGE_URL, Context.MODE_MULTI_PROCESS)
+                .getString(AlarmImageService.PREFERENCE_IMAGE_URL, null);
+        if (imageUrl != null) {
+            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
+                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
+        }
     }
 }
