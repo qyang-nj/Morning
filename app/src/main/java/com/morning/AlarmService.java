@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -139,7 +140,7 @@ public class AlarmService extends IntentService {
             PendingIntent piDownloading = PendingIntent.getService(this, 0, intentDownloading, PendingIntent.FLAG_UPDATE_CURRENT);
             long timeDownloading = time - 60 * 1000;
 
-            if (android.os.Build.VERSION.SDK_INT < 19) {
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 am.set(AlarmManager.RTC_WAKEUP, time, pi);
                 am.set(AlarmManager.RTC_WAKEUP, timeDownloading, piDownloading);
             } else {

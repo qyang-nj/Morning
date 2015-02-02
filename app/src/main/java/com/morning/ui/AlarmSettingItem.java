@@ -2,8 +2,8 @@ package com.morning.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,14 +29,18 @@ public class AlarmSettingItem extends LinearLayout {
         inflater.inflate(R.layout.settings_item, this, true);
 
         //TODO: Move to global
-        int dp = (int)(10 * context.getResources().getDisplayMetrics().density);
-        
+        int dp = (int) (10 * context.getResources().getDisplayMetrics().density);
+
         this.setPadding(dp, dp, dp, dp);
 
         tvCaption = (TextView) findViewById(R.id.caption);
         tvCaption.setText(caption);
 
-        this.setBackground(getResources().getDrawable(R.drawable.setting_item_backgroud));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            setBackgroundDrawable(getResources().getDrawable(R.drawable.setting_item_backgroud));
+        } else {
+            setBackground(getResources().getDrawable(R.drawable.setting_item_backgroud));
+        }
     }
 
     public AlarmSettingItem(Context context) {

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +97,11 @@ public class AlarmListAdapter extends BaseAdapter {
         if (alarm.enabled) {
             convertView.setBackgroundColor(mContext.getResources().getColor(R.color.main_color));
         } else {
-            convertView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.itemborder));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                convertView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.itemborder));
+            } else {
+                convertView.setBackground(mContext.getResources().getDrawable(R.drawable.itemborder));
+            }
         }
 
         return convertView;

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.morning"
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 19
     }
 

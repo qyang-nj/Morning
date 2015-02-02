@@ -3,6 +3,7 @@ package com.morning;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -38,12 +39,14 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         setContentView(R.layout.activity_alarm_ringing);
 
         /* Hide status bar and navigation(home & back) */
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        if (android.os.Build.VERSION.SDK_INT >= 19) {
-            uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+                uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
         }
-        getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 
         /* Fetch alarm from db */
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
