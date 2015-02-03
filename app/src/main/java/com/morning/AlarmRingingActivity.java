@@ -128,13 +128,13 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         }
 
         /* Play ringtone */
-        if (mRingtone == null) {
-            Uri uri = (mAlarm.ringtone == null ?
-                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM) :
-                    Uri.parse(mAlarm.ringtone));
-            mRingtone = new Ringtone(this, uri);
+        if (mAlarm.ringtone != null) {/* not silent */
+            if (mRingtone == null) {
+                Uri uri = Uri.parse(mAlarm.ringtone);
+                mRingtone = new Ringtone(this, uri);
+            }
+            mRingtone.play();
         }
-        mRingtone.play();
     }
 
     @Override
@@ -162,7 +162,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         Log.i(getClass().getName(), "onStop()");
         super.onStop();
 
-        mRingtone.stop();
+        if (mRingtone != null) {
+            mRingtone.stop();
+        }
         AlarmService.update(this);
     }
 

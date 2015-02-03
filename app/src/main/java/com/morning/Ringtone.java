@@ -9,10 +9,11 @@ import android.util.Log;
 import java.io.IOException;
 
 public class Ringtone implements MediaPlayer.OnPreparedListener {
+    private static final String TAG = Ringtone.class.getName();
+
     private MediaPlayer audioPlayer;
     private boolean isPrepared = false;
     private boolean isPlayed = false;
-    private boolean isRingtoneEnable = true; /* For test, set as false. */
 
     public Ringtone(Context context, Uri uri) {
         audioPlayer = new MediaPlayer();
@@ -38,16 +39,18 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
         isPrepared = true;
         if (isPlayed) {
             audioPlayer.start();
+            Log.d(TAG, "[Ringtone starts]");
         }
     }
 
     public void play() {
-        if (!isRingtoneEnable || audioPlayer.isPlaying()) {
+        if (audioPlayer.isPlaying()) {
             return;
         }
 
         if (isPrepared) {
             audioPlayer.start();
+            Log.d(TAG, "[Ringtone starts]");
         } else {
             isPlayed = true;
         }
@@ -58,6 +61,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
             audioPlayer.stop();
             audioPlayer.reset();
             isPrepared = false;
+            Log.d(TAG, "[Ringtone stops]");
         }
     }
 }

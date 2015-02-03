@@ -112,12 +112,17 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Constants.REQUEST_SELECT_RINGTONE) {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                mAlarm.ringtone = uri.toString();
-                android.media.Ringtone rt = RingtoneManager.getRingtone(this, uri);
-                if (rt != null) {
-                    mSound.setExplanation(rt.getTitle(this));
+                if (uri == null) { /* Select None or Silent */
+                    mAlarm.ringtone = null;
+                    mSound.setExplanation(getString(R.string.ringtone_none));
                 } else {
-                    Toast.makeText(this, R.string.warning_invalid_ringtone, Toast.LENGTH_SHORT).show();
+                    mAlarm.ringtone = uri.toString();
+                    android.media.Ringtone rt = RingtoneManager.getRingtone(this, uri);
+                    if (rt != null) {
+                        mSound.setExplanation(rt.getTitle(this));
+                    } else {
+                        Toast.makeText(this, R.string.warning_invalid_ringtone, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
