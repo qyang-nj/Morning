@@ -17,6 +17,10 @@ public class AlarmAbstractActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        onCreate(savedInstanceState, getString(R.string.app_name));
+    }
+
+    protected void onCreate(Bundle savedInstanceState, String title) {
         super.onCreate(savedInstanceState);
 
         // TODO: Learn below line
@@ -27,7 +31,7 @@ public class AlarmAbstractActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             actionBar.show();
 
             // TODO: Learn this part of code.
-            SpannableString s = new SpannableString(getResources().getString(R.string.app_name));
+            SpannableString s = new SpannableString(title);
             s.setSpan(new TypefaceSpan(this, "Amatic-Bold.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             actionBar.setTitle(s);
         }

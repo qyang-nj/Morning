@@ -27,20 +27,15 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".AlarmDetailActivity"
-            android:label="@string/app_name" />
-
-        <activity
-            android:name=".AlarmRingingActivity"
-            android:label="@string/app_name" />
+        <activity android:name=".AlarmDetailActivity" />
+        <activity android:name=".AlarmRingingActivity" />
+        <activity android:name=".SettingsActivity" />
 
         <receiver android:name=".AlarmSetter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".AlarmReceiver" />
 
         <service android:name=".AlarmService" />
