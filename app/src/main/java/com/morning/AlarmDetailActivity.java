@@ -35,6 +35,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         int alarmId = intent.getIntExtra(Alarm.KEY_ALARM_ID, -1);
         if (alarmId < 0) {
             mAlarm = new Alarm();
+            mAlarm.ringtone = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM).toString();
         } else {
             mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
         }
@@ -47,8 +48,8 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         mEtName.setText(mAlarm.name);
 
         final AlarmSettingItem2Text itemSound = (AlarmSettingItem2Text) findViewById(R.id.itemSound);
-        Uri u = (mAlarm.ringtone == null ? RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM) : Uri.parse(mAlarm.ringtone));
-        itemSound.setExplanation(u == null ? "Default" : RingtoneManager.getRingtone(this, u).getTitle(this));
+        Uri u = (mAlarm.ringtone == null ? null : Uri.parse(mAlarm.ringtone));
+        itemSound.setExplanation(u == null ? getString(R.string.ringtone_none) : RingtoneManager.getRingtone(this, u).getTitle(this));
         itemSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
