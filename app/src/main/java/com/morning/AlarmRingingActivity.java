@@ -1,12 +1,15 @@
 package com.morning;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +35,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     private Handler mAutoSnoozeHandler;
     private Runnable mAutoSnoozeCallback;
+
+    private Vibrator mVibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +140,17 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             }
             mRingtone.play();
         }
+
+        /* Vibrate */
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean vibrate = sharedPref.getBoolean("pref_vibrate", true);
+        if (vibrate) {
+            if (mVibrator == null) {
+                mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            }
+            mVibrator.vibrate(new long[]{0, 500, 500}, 1);
+            Log.i(getClass().getName(), "Vibrating");
+        }
     }
 
     @Override
@@ -155,16 +171,18 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             mAlarm.enabled = false;
             getHelper().getAlarmDao().update(mAlarm);
         }
-    }
 
-    @Override
-    protected void onStop() {
-        Log.i(getClass().getName(), "onStop()");
-        super.onStop();
-
+        /* Stop ringing */
         if (mRingtone != null) {
             mRingtone.stop();
         }
+
+        /* Stop vibrating */
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
+
+        /* Update alarm schedule */
         AlarmService.update(this);
     }
 
