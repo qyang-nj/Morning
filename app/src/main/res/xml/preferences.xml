@@ -5,7 +5,8 @@
         android:title="@string/snooze_duration"
         android:dialogTitle="@string/snooze_duration"
         android:entries="@array/pref_snooze_duration_entries"
-        android:entryValues="@array/pref_snooze_duration_entries" />
+        android:entryValues="@array/pref_snooze_duration_values"
+        android:defaultValue="5"/>
     <SwitchPreference
         android:key="pref_vibrate"
         android:title="@string/vibrate" />

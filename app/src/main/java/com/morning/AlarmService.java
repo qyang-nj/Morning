@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -117,15 +120,20 @@ public class AlarmService extends IntentService {
             PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
             long time = alarm.getNextTime();
             setAlarm(pi, time);
-        } else if (SNOOZE.equals(action)) {
-            Log.i(getClass().getName(), "[Alarm snoozing] " + alarm.toString());
-            PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            long time = new Date().getTime() + Constants.DEFAULT_SNOOZE_TIME * 60 * 1000;
-            setAlarm(pi, time);
-        } else if (CANCEL.equals(action)) {
-            PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            am.cancel(pi);
+        } else {
+            if (SNOOZE.equals(action)) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+                int snoozeDuration = Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
+
+                Log.i(getClass().getName(), "[Alarm snoozing] " + snoozeDuration + " mins; " + alarm.toString());
+                PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                long time = new Date().getTime() + snoozeDuration * 60 * 1000;
+                setAlarm(pi, time);
+            } else if (CANCEL.equals(action)) {
+                PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                am.cancel(pi);
+            }
         }
     }
 

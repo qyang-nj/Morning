@@ -8,12 +8,12 @@
         <item>25 minutes</item>
         <item>30 minutes</item>
     </string-array>
-    <integer-array name="pref_snooze_duration_value">
+    <string-array name="pref_snooze_duration_values">
         <item>5</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
         <item>25</item>
         <item>30</item>
-    </integer-array>
+    </string-array>
 </resources>

@@ -8,6 +8,7 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.preference.PreferenceManager;
 
 /**
  * Created by Qing Yang on 2/2/15.
@@ -24,6 +25,7 @@ public class SettingsActivity extends AlarmAbstractActivity {
             /* Load the preferences from an XML resource */
             addPreferencesFromResource(R.xml.preferences);
 
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, true);
             initSummary(getPreferenceScreen());
         }
 

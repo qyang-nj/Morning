@@ -76,7 +76,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             @Override
             public void onClick(View view) {
                 AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
-                Toast.makeText(AlarmRingingActivity.this, "Snoozed for 10 minutes", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
