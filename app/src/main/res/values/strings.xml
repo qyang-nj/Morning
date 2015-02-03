@@ -17,5 +17,5 @@
     <string name="warning_invalid_ringtone">Please select a valid music file.</string>
     <string name="ringtone_none">None</string>
     <string name="vibrate">Vibrate</string>
-
+    <string name="snooze_duration">Snooze duration</string>
 </resources>

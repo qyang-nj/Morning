@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_snooze_duration"
+        android:title="@string/snooze_duration"
+        android:dialogTitle="@string/snooze_duration"
+        android:entries="@array/pref_snooze_duration_entries"
+        android:entryValues="@array/pref_snooze_duration_entries" />
     <SwitchPreference
-        android:key="pref_sync"
+        android:key="pref_vibrate"
         android:title="@string/vibrate" />
 </PreferenceScreen>
