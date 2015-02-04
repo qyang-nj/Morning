@@ -16,6 +16,8 @@ import com.morning.model.Alarm;
 import com.morning.model.RepeatOption;
 import com.morning.ui.AlarmSettingItem2Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumSet;
 
 
@@ -97,7 +99,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
             mAlarm.enabled = true;
 
             getHelper().getAlarmDao().createOrUpdate(mAlarm);
-            Toast.makeText(this, R.string.prompt_alarm_created, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, SimpleDateFormat.getInstance().format(new Date(mAlarm.getNextTime())), Toast.LENGTH_LONG).show();
 
             finish();
             return true;

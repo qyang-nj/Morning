@@ -8,9 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.morning.model.Alarm;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class AlarmListActivity extends AlarmAbstractActivity {
@@ -44,6 +47,11 @@ public class AlarmListActivity extends AlarmAbstractActivity {
                     Alarm alarm = (Alarm) mAdapter.getItem(position);
                     alarm.enabled = !alarm.enabled;
                     getHelper().getAlarmDao().update(alarm);
+                    if (alarm.enabled) {
+                        Toast.makeText(AlarmListActivity.this, 
+                                SimpleDateFormat.getInstance().format(new Date(alarm.getNextTime())), 
+                                Toast.LENGTH_LONG).show();
+                    }
 
                     mAdapter.notifyDataSetChanged();
                     AlarmService.update(AlarmListActivity.this, mAlarms);
