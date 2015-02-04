@@ -10,14 +10,13 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.morning.model.Alarm;
 import com.morning.model.AlarmDbHelper;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,33 +26,18 @@ import java.util.List;
 public class AlarmService extends IntentService {
     public static final String CREATE = "CREATE";
     public static final String CANCEL = "CANCEL";
-    public static final String SNOOZE = "SNOOZE";
+
+    private static final String KEY_IS_SNOOZED = "isSnoozed";
 
     private IntentFilter matcher;
     private AlarmDbHelper databaseHelper = null;
 
     public static void createAlarm(Context context, Alarm alarm) {
-        if (alarm == null) {
-            return;
-        }
-        Intent i = new Intent(context, AlarmService.class);
-        i.setAction(AlarmService.CREATE);
-        i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
-        context.startService(i);
-    }
-
-    public static void cancelAlarm(Context context, Alarm alarm) {
-        Intent i = new Intent(context, AlarmService.class);
-        i.setAction(AlarmService.CANCEL);
-        i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
-        context.startService(i);
+        createAlarm(context, alarm, false);
     }
 
     public static void snoozeAlarm(Context context, Alarm alarm) {
-        Intent i = new Intent(context, AlarmService.class);
-        i.setAction(AlarmService.SNOOZE);
-        i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
-        context.startService(i);
+        createAlarm(context, alarm, true);
     }
 
     public static void update(Context context, List<Alarm> alarms) {
@@ -69,13 +53,23 @@ public class AlarmService extends IntentService {
         update(context, alarms);
     }
 
+    private static void createAlarm(Context context, Alarm alarm, boolean snoozed) {
+        if (alarm == null) {
+            return;
+        }
+        Intent i = new Intent(context, AlarmService.class);
+        i.setAction(AlarmService.CREATE);
+        i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
+        i.putExtra(KEY_IS_SNOOZED, snoozed);
+        context.startService(i);
+    }
+
     public AlarmService() {
         super(AlarmService.class.getName());
 
         matcher = new IntentFilter();
         matcher.addAction(CREATE);
         matcher.addAction(CANCEL);
-        matcher.addAction(SNOOZE);
     }
 
     @Override
@@ -83,12 +77,40 @@ public class AlarmService extends IntentService {
         String action = intent.getAction();
         int alarmId = intent.getIntExtra(Alarm.KEY_ALARM_ID, -1);
 
-        if (alarmId < 0) {
+        if (alarmId < 0) { /* invalid alarm id */
             return;
         }
 
-        if (matcher.matchAction(action)) {
-            execute(action, alarmId);
+        if (!matcher.matchAction(action)) { /* invalid action */
+            return;
+        }
+
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Alarm alarm = getHelper().getAlarmDao().queryForId(alarmId);
+
+        boolean isSnoozed = intent.getBooleanExtra(KEY_IS_SNOOZED, false);
+        int requestCode = isSnoozed ? alarmId + 1 : 0;
+        long time = isSnoozed ? getSnoozeTime() : alarm.getNextTime();
+
+        Intent intentForRingAlarm = new Intent(this, AlarmReceiver.class);
+        intentForRingAlarm.putExtra(Alarm.KEY_ALARM_ID, alarmId);
+        PendingIntent piForRingAlarm = PendingIntent.getBroadcast(this, requestCode,
+                intentForRingAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentForDownloadImage = new Intent(this, AlarmImageService.class);
+        PendingIntent piForDownloadImage = PendingIntent.getService(this, requestCode,
+                intentForDownloadImage, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (time == Long.MAX_VALUE || CANCEL.equals(action)) { /* Cancel alarm */
+            am.cancel(piForRingAlarm);
+            am.cancel(piForDownloadImage);
+            Log.i(getClass().getName(), time == Long.MAX_VALUE ?
+                    "[ No scheduled alarm ]" : "[ Alarm canceled ] " + alarm.toString());
+        } else if (CREATE.equals(action)) {
+            setAlarm(am, piForRingAlarm, time);
+            setAlarm(am, piForDownloadImage, time - 60 * 1000);
+            Log.i(getClass().getName(), String.format("[ Alarm scheduled ] [%s] [%s] [Snoozed: %s]",
+                    alarm.toString(), SimpleDateFormat.getInstance().format(new Date(time)), isSnoozed));
         }
     }
 
@@ -108,55 +130,22 @@ public class AlarmService extends IntentService {
         return databaseHelper;
     }
 
-    private void execute(String action, int alarmId) {
-
-        Alarm alarm = getHelper().getAlarmDao().queryForId(alarmId);
-
-        Intent i = new Intent(this, AlarmReceiver.class);
-        i.putExtra(Alarm.KEY_ALARM_ID, alarmId);
-
-        if (CREATE.equals(action)) {
-            Log.i(getClass().getName(), "[Alarm creating] " + alarm.toString());
-            PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            long time = alarm.getNextTime();
-            setAlarm(pi, time);
-        } else {
-            if (SNOOZE.equals(action)) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                int snoozeDuration = Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
-
-                Log.i(getClass().getName(), "[Alarm snoozing] " + snoozeDuration + " mins; " + alarm.toString());
-                PendingIntent pi = PendingIntent.getBroadcast(this, alarmId + 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                long time = new Date().getTime() + snoozeDuration * 60 * 1000;
-                setAlarm(pi, time);
-            } else if (CANCEL.equals(action)) {
-                PendingIntent pi = PendingIntent.getBroadcast(this, 0 /* requestCode */, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                am.cancel(pi);
-            }
-        }
+    /* Get snooze duration from shared preferences */
+    private int getSnoozeDuration() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        return Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
     }
 
-    private void setAlarm(PendingIntent pi, long time) {
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (time == Long.MAX_VALUE) {
-            am.cancel(pi);
-            Log.i(getClass().getName(), "[Alarm canceled]");
-        } else {
-            /* Schedule image to be downloaded 1 min prior to ringing */
-            Intent intentDownloading = new Intent(this, AlarmImageService.class);
-            PendingIntent piDownloading = PendingIntent.getService(this, 0, intentDownloading, PendingIntent.FLAG_UPDATE_CURRENT);
-            long timeDownloading = time - 60 * 1000;
+    private long getSnoozeTime() {
+        return (new Date().getTime()) / 1000 * 1000 + getSnoozeDuration() * 60 * 1000;
+    }
 
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                am.set(AlarmManager.RTC_WAKEUP, time, pi);
-                am.set(AlarmManager.RTC_WAKEUP, timeDownloading, piDownloading);
-            } else {
-                /* If the stated trigger time is in the past, the alarm will be triggered immediately. */
-                am.setExact(AlarmManager.RTC_WAKEUP, time, pi);
-                am.setExact(AlarmManager.RTC_WAKEUP, timeDownloading, piDownloading);
-            }
-            Log.i(getClass().getName(), "[Alarm scheduled] " + DateFormat.getDateTimeInstance().format(new Date(time)));
+    private void setAlarm(AlarmManager am, PendingIntent pi, long time) {
+         /* If the stated trigger time is in the past, the alarm will be triggered immediately. */
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            am.set(AlarmManager.RTC_WAKEUP, time, pi);
+        } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, time, pi);
         }
     }
 }
