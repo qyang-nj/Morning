@@ -13,6 +13,8 @@
         <item name="android:windowTitleSize">0dp</item>
 
         <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
+        <item name="asb_switchStyle">@style/Custom.Switch</item>
+        <item name="asb_switchPreferenceStyle">@style/Preference.SwitchPreference</item>
     </style>
 
     <style name="Custom.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
@@ -24,5 +26,10 @@
     <style name="Custom.ActionBar.TitleTextStyle" parent="@android:style/Widget.TextView">
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">@color/dark_grey</item>
+    </style>
+
+    <style name="Custom.Switch" parent="@style/Widget.Holo.Light.CompoundButton.Switch" >
+        <item name="asb_track">@drawable/apptheme_switch_track_holo_light</item>
+        <item name="asb_thumb">@drawable/apptheme_switch_inner_holo_light</item>
     </style>
 </resources>

@@ -7,7 +7,7 @@
         android:entries="@array/pref_snooze_duration_entries"
         android:entryValues="@array/pref_snooze_duration_values"
         android:defaultValue="5"/>
-    <SwitchPreference
+    <org.jraf.android.backport.switchwidget.SwitchPreference
         android:key="pref_vibrate"
         android:title="@string/vibrate" />
 </PreferenceScreen>
