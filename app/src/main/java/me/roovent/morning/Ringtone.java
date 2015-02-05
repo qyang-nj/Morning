@@ -19,13 +19,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
         audioPlayer = new MediaPlayer();
         try {
             audioPlayer.setDataSource(context, uri);
-        } catch (IllegalArgumentException e) {
-            Log.e(getClass().getName(), e.getMessage());
-        } catch (SecurityException e) {
-            Log.e(getClass().getName(), e.getMessage());
-        } catch (IllegalStateException e) {
-            Log.e(getClass().getName(), e.getMessage());
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
             Log.e(getClass().getName(), e.getMessage());
         }
         audioPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
