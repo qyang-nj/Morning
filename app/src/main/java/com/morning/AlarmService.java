@@ -110,7 +110,7 @@ public class AlarmService extends IntentService {
             setAlarm(am, piForRingAlarm, time);
             setAlarm(am, piForDownloadImage, time - 60 * 1000);
             Log.i(getClass().getName(), String.format("[ Alarm scheduled ] [%s] [%s] [Snoozed: %s]",
-                    alarm.toString(), SimpleDateFormat.getInstance().format(new Date(time)), isSnoozed));
+                    alarm.toString(), SimpleDateFormat.getDateTimeInstance().format(new Date(time)), isSnoozed));
         }
     }
 
@@ -133,7 +133,14 @@ public class AlarmService extends IntentService {
     /* Get snooze duration from shared preferences */
     private int getSnoozeDuration() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
+        int duration = 5;
+        try {
+            duration = Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
+        } catch (NumberFormatException e) {
+            Log.e(getClass().getName(), e.getMessage());
+            duration = 5;
+        }
+        return duration;
     }
 
     private long getSnoozeTime() {

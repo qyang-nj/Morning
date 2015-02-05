@@ -13,6 +13,9 @@
         <item name="android:windowTitleSize">0dp</item>
 
         <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light</item>
+        <item name="android:alertDialogTheme">@style/Custom.AlertDialog</item>
+
         <item name="asb_switchStyle">@style/Custom.Switch</item>
         <item name="asb_switchPreferenceStyle">@style/Preference.SwitchPreference</item>
     </style>
@@ -31,5 +34,13 @@
     <style name="Custom.Switch" parent="@style/Widget.Holo.Light.CompoundButton.Switch" >
         <item name="asb_track">@drawable/apptheme_switch_track_holo_light</item>
         <item name="asb_thumb">@drawable/apptheme_switch_inner_holo_light</item>
+    </style>
+
+    <style name="Custom.AlertDialog" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 </resources>

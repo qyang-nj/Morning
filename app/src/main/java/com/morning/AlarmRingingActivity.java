@@ -40,6 +40,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(getClass().getName(), "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ringing);
 
@@ -113,6 +114,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     @Override
     protected void onResume() {
+        Log.d(getClass().getName(), "onResume()");
         super.onResume();
 
         /* Set the window to keep screen on */
@@ -154,7 +156,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     @Override
     protected void onPause() {
-        Log.i(getClass().getName(), "onPause()");
+        Log.d(getClass().getName(), "onPause()");
         super.onPause();
 
         if (mWakeLock != null && mWakeLock.isHeld()) {

@@ -26,8 +26,9 @@ do
 	whenElapsed=$(cat $TEMP_LOG_FILE | awk NR==$((line+1)) | awk '{print $2}' | cut -d'=' -f2)
 	whenRTC=$(expr $whenElapsed - $nowELAPSED + $nowRTC + 1)
 
-	printf "[ Time ] "
+	printf "[ Time ] \e[33m"
 	date --date "@$((whenRTC / 1000))" #"+%Y-%m-%d %T"
+	printf "\e[0m"
 
 	printf "===============================================================================================\n\n"
 done
