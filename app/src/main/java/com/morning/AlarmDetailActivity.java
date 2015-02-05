@@ -50,7 +50,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         mEtName.setText(mAlarm.name);
 
         final AlarmSettingItem2Text itemSound = (AlarmSettingItem2Text) findViewById(R.id.itemSound);
-        Uri u = (mAlarm.ringtone == null ? null : Uri.parse(mAlarm.ringtone));
+        final Uri u = (mAlarm.ringtone == null ? null : Uri.parse(mAlarm.ringtone));
         itemSound.setExplanation(u == null ? getString(R.string.ringtone_none) : RingtoneManager.getRingtone(this, u).getTitle(this));
         itemSound.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +58,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, u);
                 startActivityForResult(intent, Constants.REQUEST_SELECT_RINGTONE);
             }
         });
