@@ -1,12 +1,12 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.morning.model.Alarm;
-import com.morning.model.AlarmDbHelper;
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.AlarmDbHelper;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -13,8 +13,8 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.morning.model.Alarm;
-import com.morning.model.AlarmDbHelper;
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.AlarmDbHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

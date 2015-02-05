@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,11 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.morning.model.Alarm;
-import com.morning.model.AlarmDbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.AlarmDbHelper;
 
 
 public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {

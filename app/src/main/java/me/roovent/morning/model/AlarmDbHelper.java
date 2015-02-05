@@ -1,4 +1,4 @@
-package com.morning.model;
+package me.roovent.morning.model;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

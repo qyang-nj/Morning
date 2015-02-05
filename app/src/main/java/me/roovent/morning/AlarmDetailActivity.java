@@ -1,6 +1,5 @@
-package com.morning;
+package me.roovent.morning;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,9 +11,9 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.morning.model.Alarm;
-import com.morning.model.RepeatOption;
-import com.morning.ui.AlarmSettingItem2Text;
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.RepeatOption;
+import me.roovent.morning.ui.AlarmSettingItem2Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,7 +113,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_SELECT_RINGTONE) {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 if (uri == null) { /* Select None or Silent */

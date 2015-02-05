@@ -1,11 +1,11 @@
-package com.morning.model;
+package me.roovent.morning.model;
 
 import android.content.Context;
 
-import com.morning.R;
-
 import java.util.Calendar;
 import java.util.EnumSet;
+
+import me.roovent.morning.R;
 
 public enum RepeatOption {
     SUNDAY(1, Calendar.SUNDAY),

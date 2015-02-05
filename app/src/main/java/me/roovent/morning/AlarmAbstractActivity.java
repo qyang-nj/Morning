@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.app.ActionBar;
 import android.os.Bundle;
@@ -7,8 +7,9 @@ import android.text.SpannableString;
 import android.view.Window;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.morning.model.AlarmDbHelper;
-import com.morning.ui.TypefaceSpan;
+
+import me.roovent.morning.model.AlarmDbHelper;
+import me.roovent.morning.ui.TypefaceSpan;
 
 /**
  * Created by qing on 1/23/15.

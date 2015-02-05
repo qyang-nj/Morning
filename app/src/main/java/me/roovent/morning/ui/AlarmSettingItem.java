@@ -1,4 +1,4 @@
-package com.morning.ui;
+package me.roovent.morning.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.morning.R;
+import me.roovent.morning.R;
 
 /**
  * Created by qing on 1/24/15.

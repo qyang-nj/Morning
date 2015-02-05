@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,9 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.morning.model.Alarm;
-
 import java.util.List;
+
+import me.roovent.morning.model.Alarm;
 
 /**
  * Created by Qing on 1/25/15.

@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="10dp"
     android:paddingBottom="12dp"
-    tools:context="com.morning.AlarmListActivity">
+    tools:context="me.roovent.morning.AlarmListActivity">
 
     <GridView
         android:id="@+id/grid"

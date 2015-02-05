@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.morning.model.Alarm;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import me.roovent.morning.model.Alarm;
 
 public class AlarmListActivity extends AlarmAbstractActivity {
     private AlarmListAdapter mAdapter;
@@ -48,8 +48,8 @@ public class AlarmListActivity extends AlarmAbstractActivity {
                     alarm.enabled = !alarm.enabled;
                     getHelper().getAlarmDao().update(alarm);
                     if (alarm.enabled) {
-                        Toast.makeText(AlarmListActivity.this, 
-                                SimpleDateFormat.getInstance().format(new Date(alarm.getNextTime())), 
+                        Toast.makeText(AlarmListActivity.this,
+                                SimpleDateFormat.getInstance().format(new Date(alarm.getNextTime())),
                                 Toast.LENGTH_LONG).show();
                     }
 

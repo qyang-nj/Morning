@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

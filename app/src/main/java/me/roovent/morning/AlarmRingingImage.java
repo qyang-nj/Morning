@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import retrofit.http.GET;
 

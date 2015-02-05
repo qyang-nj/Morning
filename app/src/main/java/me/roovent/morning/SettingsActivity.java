@@ -1,4 +1,4 @@
-package com.morning;
+package me.roovent.morning;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

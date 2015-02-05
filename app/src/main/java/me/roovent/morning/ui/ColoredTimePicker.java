@@ -1,19 +1,19 @@
-package com.morning.ui;
+package me.roovent.morning.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
-import com.morning.R;
-
 import java.lang.reflect.Field;
+
+import me.roovent.morning.R;
 
 /**
  * Created by Qing Yang on 1/29/15.
  */
 public class ColoredTimePicker extends TimePicker {
-    
+
     String fields[] = new String[] {"mHourSpinner", "mMinuteSpinner", "mAmPmSpinner"};
 
     public ColoredTimePicker(Context context, AttributeSet attrs) {
