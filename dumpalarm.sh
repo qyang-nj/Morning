@@ -1,6 +1,8 @@
 #!/bin/bash
+## This script is used to dump system alarm infomation by package
+## Created by Qing Yang on 2/3/2015
 
-PACKAGE_NAME="com.morning"
+PACKAGE_NAME="me.roovent.morning"
 TEMP_LOG_FILE="/tmp/dumpalarm.log"
 
 #save the dump file
@@ -19,16 +21,12 @@ count=0
 
 for line in $(awk "/Alarm.*${PACKAGE_NAME}/{print NR}" ${TEMP_LOG_FILE})
 do
-	printf "===============================================================================================\n"
 	printf "[ Alarm $((++count)) ]"
 	cat $TEMP_LOG_FILE | awk "NR>=${line}&&NR<=$((line+2))"
 
 	whenElapsed=$(cat $TEMP_LOG_FILE | awk NR==$((line+1)) | awk '{print $2}' | cut -d'=' -f2)
 	whenRTC=$(expr $whenElapsed - $nowELAPSED + $nowRTC + 1)
 
-	printf "[ Time ] \e[33m"
-	date --date "@$((whenRTC / 1000))" #"+%Y-%m-%d %T"
-	printf "\e[0m"
-
-	printf "===============================================================================================\n\n"
+	ringTime=$(date --date "@$((whenRTC / 1000))")
+	printf "[ Time ] \e[33m${ringTime}\e[0m\n\n"
 done
