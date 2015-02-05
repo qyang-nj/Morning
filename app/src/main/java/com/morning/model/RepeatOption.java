@@ -1,5 +1,9 @@
 package com.morning.model;
 
+import android.content.Context;
+
+import com.morning.R;
+
 import java.util.Calendar;
 import java.util.EnumSet;
 
@@ -14,6 +18,10 @@ public enum RepeatOption {
 
     private int value;
     private int valueOfCalendar; /* Value of Calendar.SUNDAY ant so on */
+
+    private static final int valueOnce = 0;
+    private static final int valueWeekday = getValueFromSet(EnumSet.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY));
+    private static final int valueWeekend = getValueFromSet(EnumSet.of(SUNDAY, SATURDAY));;
 
     private RepeatOption(int val, int valOfCal) {
         this.value = val;
@@ -47,16 +55,24 @@ public enum RepeatOption {
         return set;
     }
 
-    public static String formatSet(EnumSet<RepeatOption> set) {
-        if (set.size() == 0) {
-            return "Once";
-        }
+    public static String formatSet(EnumSet<RepeatOption> set, Context context) {
+        String str;
 
-        StringBuilder sb = new StringBuilder();
-        for (RepeatOption ro : set) {
-            sb.append(ro.toString()).append(" ");
+        int value = getValueFromSet(set);
+        if (value == valueOnce) {
+            str =context.getString(R.string.repeat_once);
+        } else if (value == valueWeekday) {
+            str =context.getString(R.string.repeat_weekday);
+        } else if (value == valueWeekend) {
+            str =context.getString(R.string.repeat_weekend);
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (RepeatOption ro : set) {
+                sb.append(ro.toString()).append(" ");
+            }
+            str = sb.toString().trim().replace(" ", ", ");
         }
-        return sb.toString().trim().replace(" ", ", ");
+        return str;
     }
 
     public int getValue() {

@@ -65,7 +65,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         mSound = itemSound;
 
         final AlarmSettingItem2Text itemRepeat = (AlarmSettingItem2Text) findViewById(R.id.itemRepeat);
-        itemRepeat.setExplanation(RepeatOption.formatSet(RepeatOption.getSetFromValue(mAlarm.repeat)));
+        itemRepeat.setExplanation(RepeatOption.formatSet(RepeatOption.getSetFromValue(mAlarm.repeat), this));
         itemRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +75,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
                     @Override
                     public void onDialogPositiveClick(EnumSet<RepeatOption> repeats) {
                         mAlarm.repeat = RepeatOption.getValueFromSet(repeats);
-                        itemRepeat.setExplanation(RepeatOption.formatSet(repeats));
+                        itemRepeat.setExplanation(RepeatOption.formatSet(repeats, AlarmDetailActivity.this));
                     }
                 });
                 repeatDialog.show(getFragmentManager(), "repeat");

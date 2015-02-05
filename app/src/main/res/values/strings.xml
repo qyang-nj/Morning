@@ -18,4 +18,8 @@
     <string name="ringtone_none">None</string>
     <string name="vibrate">Vibrate</string>
     <string name="snooze_duration">Snooze duration</string>
+
+    <string name="repeat_once">Once</string>
+    <string name="repeat_weekday">Weekday</string>
+    <string name="repeat_weekend">Weekend</string>
 </resources>
