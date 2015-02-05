@@ -43,6 +43,7 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
         }
     }
 
+    /* Ringtone can only be played once. If you need to play it again, create a new one. */
     public void play() {
         if (audioPlayer.isPlaying()) {
             return;
@@ -57,10 +58,12 @@ public class Ringtone implements MediaPlayer.OnPreparedListener {
     }
 
     public void stop() {
-        if (audioPlayer != null && audioPlayer.isPlaying()) {
+        /* We don't need to know if the player is playing.
+         * In some circumstances the player has to be stopped before getting prepared. */
+        if (audioPlayer != null) {
             audioPlayer.stop();
-            audioPlayer.reset();
-            isPrepared = false;
+            /* Note: http://developer.android.com/reference/android/media/MediaPlayer.html#release() */
+            audioPlayer.release();
             Log.d(TAG, "[Ringtone stops]");
         }
     }

@@ -2,7 +2,6 @@ package com.morning;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.morning.model.Alarm;
@@ -53,8 +51,21 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             }
             getWindow().getDecorView().setSystemUiVisibility(uiOptions);
         }
+    }
 
-        /* Fetch alarm from db */
+    @Override
+    protected void onResume() {
+        Log.d(getClass().getName(), "onResume()");
+        super.onResume();
+
+
+
+        /* Fetch alarm from db
+         *
+         * Because two alarms may ring at the same time (one of them is snoozed),
+         * onResume() can be invoked twice for different alarms. Hence, fetching alarm
+         * from db should be in onResume() instead of onCreate().
+         */
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
         mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
         if (mAlarm == null) {
@@ -65,6 +76,17 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         TextView txtTime = (TextView) findViewById(R.id.txt_time);
         Calendar cal = Calendar.getInstance();
         txtTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
+
+        /* Set auto snooze */
+        mAutoSnoozeCallback = new Runnable() {
+            @Override
+            public void run() {
+                AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
+                finish();
+            }
+        };
+        mAutoSnoozeHandler = new Handler();
+        mAutoSnoozeHandler.postDelayed(mAutoSnoozeCallback, RINGING_EXPIRED_TIMEOUT);
 
         findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +106,62 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         /* Fetch image from server */
         populateImageView();
 
+        wakeupScreen();
+        startVibrating();
+        playRingtone();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(getClass().getName(), "onPause()");
+        super.onPause();
+
+        if (mAutoSnoozeHandler != null) {
+            mAutoSnoozeHandler.removeCallbacks(mAutoSnoozeCallback);
+        }
+
+        /* Saving data should be in onPause(), because other activity's onResume() may use this data. */
+        if (mAlarm.repeat == 0) {
+            mAlarm.enabled = false;
+            getHelper().getAlarmDao().update(mAlarm);
+        }
+
+        stopRingtone();
+        stopVibrating();
+        releaseScreen();
+
+        /* Update alarm schedule */
+        AlarmService.update(this);
+    }
+
+    private void populateImageView() {
+        String imageUrl = getSharedPreferences(AlarmImageService.PREFERENCE_IMAGE_URL, Context.MODE_MULTI_PROCESS)
+                .getString(AlarmImageService.PREFERENCE_IMAGE_URL, null);
+        if (imageUrl != null) {
+            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
+                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
+        }
+    }
+
+    private void startVibrating() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean vibrate = sharedPref.getBoolean("pref_vibrate", true);
+        if (vibrate) {
+            if (mVibrator == null) {
+                mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            }
+            mVibrator.vibrate(new long[]{0, 500, 500}, 1);
+            Log.i(getClass().getName(), "Vibrating");
+        }
+    }
+
+    private void stopVibrating() {
+        if (mVibrator != null) {
+            mVibrator.cancel();
+        }
+    }
+
+    private void wakeupScreen() {
         /* Ensure wakelock release */
         Runnable releaseWakelock = new Runnable() {
             @Override
@@ -100,23 +178,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         };
         new Handler().postDelayed(releaseWakelock, RINGING_EXPIRED_TIMEOUT);
 
-        /* Set auto snooze */
-        mAutoSnoozeCallback = new Runnable() {
-            @Override
-            public void run() {
-                AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
-                finish();
-            }
-        };
-        mAutoSnoozeHandler = new Handler();
-        mAutoSnoozeHandler.postDelayed(mAutoSnoozeCallback, RINGING_EXPIRED_TIMEOUT);
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(getClass().getName(), "onResume()");
-        super.onResume();
-
         /* Set the window to keep screen on */
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -132,67 +193,26 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         if (!mWakeLock.isHeld()) {
             mWakeLock.acquire();
         }
-
-        /* Play ringtone */
-        if (mAlarm.ringtone != null) {/* not silent */
-            if (mRingtone == null) {
-                Uri uri = Uri.parse(mAlarm.ringtone);
-                mRingtone = new Ringtone(this, uri);
-            }
-            mRingtone.play();
-        }
-
-        /* Vibrate */
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean vibrate = sharedPref.getBoolean("pref_vibrate", true);
-        if (vibrate) {
-            if (mVibrator == null) {
-                mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            }
-            mVibrator.vibrate(new long[]{0, 500, 500}, 1);
-            Log.i(getClass().getName(), "Vibrating");
-        }
     }
 
-    @Override
-    protected void onPause() {
-        Log.d(getClass().getName(), "onPause()");
-        super.onPause();
-
+    private void releaseScreen() {
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
         }
-
-        if (mAutoSnoozeHandler != null) {
-            mAutoSnoozeHandler.removeCallbacks(mAutoSnoozeCallback);
-        }
-
-        /* Saving data should be in onPause(), because other activity's onResume() may use this data. */
-        if (mAlarm.repeat == 0) {
-            mAlarm.enabled = false;
-            getHelper().getAlarmDao().update(mAlarm);
-        }
-
-        /* Stop ringing */
-        if (mRingtone != null) {
-            mRingtone.stop();
-        }
-
-        /* Stop vibrating */
-        if (mVibrator != null) {
-            mVibrator.cancel();
-        }
-
-        /* Update alarm schedule */
-        AlarmService.update(this);
     }
 
-    private void populateImageView() {
-        String imageUrl = getSharedPreferences(AlarmImageService.PREFERENCE_IMAGE_URL, Context.MODE_MULTI_PROCESS)
-                .getString(AlarmImageService.PREFERENCE_IMAGE_URL, null);
-        if (imageUrl != null) {
-            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
-                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
+    private void playRingtone() {
+        if (mAlarm.ringtone != null) {/* not silent */
+            Uri uri = Uri.parse(mAlarm.ringtone);
+            /* When palying, always create a new Ringtone object */
+            mRingtone = new Ringtone(this, uri);
+            mRingtone.play();
+        }
+    }
+
+    private void stopRingtone() {
+        if (mRingtone != null) {
+            mRingtone.stop();
         }
     }
 }
