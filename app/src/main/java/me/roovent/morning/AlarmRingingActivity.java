@@ -59,8 +59,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         Log.d(getClass().getName(), "onResume()");
         super.onResume();
 
-
-
         /* Fetch alarm from db
          *
          * Because two alarms may ring at the same time (one of them is snoozed),
@@ -74,9 +72,19 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             mAlarm = new Alarm(); /* Just for safety. */
         }
 
+        /* Set TextView: time */
         TextView txtTime = (TextView) findViewById(R.id.txt_time);
         Calendar cal = Calendar.getInstance();
         txtTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
+
+        /* Set TextView: name */
+        TextView txtName = (TextView) findViewById(R.id.txt_name);
+        if (mAlarm.name == null || mAlarm.name.isEmpty()) {
+            txtName.setVisibility(View.GONE);
+        } else {
+            txtName.setVisibility(View.VISIBLE);
+            txtName.setText(mAlarm.name);
+        }
 
         /* Set auto snooze */
         mAutoSnoozeCallback = new Runnable() {
