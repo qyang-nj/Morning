@@ -143,6 +143,15 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         AlarmService.update(this);
     }
 
+    /* The activity is no longer visible */
+    @Override
+    protected void onStop() {
+        Log.d(getClass().getName(), "onStop()");
+        super.onStop();
+
+        finish();
+    }
+
     private void populateImageView() {
         String imageUrl = getSharedPreferences(AlarmImageService.PREFERENCE_IMAGE_URL, Context.MODE_MULTI_PROCESS)
                 .getString(AlarmImageService.PREFERENCE_IMAGE_URL, null);
