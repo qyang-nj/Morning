@@ -22,6 +22,8 @@ import java.util.EnumSet;
 
 
 public class AlarmDetailActivity extends AlarmAbstractActivity {
+    private static final int REQUEST_SELECT_RINGTONE = 5;
+
     private Alarm mAlarm;
 
     private TimePicker mTimePicker;
@@ -59,7 +61,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.ringtones));
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, u);
-                startActivityForResult(intent, Constants.REQUEST_SELECT_RINGTONE);
+                startActivityForResult(intent, REQUEST_SELECT_RINGTONE);
             }
         });
         mSound = itemSound;
@@ -113,7 +115,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Constants.REQUEST_SELECT_RINGTONE) {
+            if (requestCode == REQUEST_SELECT_RINGTONE) {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 if (uri == null) { /* Select None or Silent */
                     mAlarm.ringtone = null;
