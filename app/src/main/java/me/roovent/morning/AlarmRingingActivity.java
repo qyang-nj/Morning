@@ -52,6 +52,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             }
             getWindow().getDecorView().setSystemUiVisibility(uiOptions);
         }
+
+        wakeupScreen();
     }
 
     @Override
@@ -115,7 +117,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         /* Fetch image from server */
         populateImageView();
 
-        wakeupScreen();
         startVibrating();
         playRingtone();
     }
@@ -137,7 +138,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
         stopRingtone();
         stopVibrating();
-        releaseScreen();
 
         /* Update alarm schedule */
         AlarmService.update(this);
@@ -149,7 +149,11 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         Log.d(getClass().getName(), "onStop()");
         super.onStop();
 
-        finish();
+        releaseScreen();
+
+        /* For some reasons, when the phone is asleep and alarm starts to ring,
+         * onStop() will be called before showing up, so finish() cannot be here. */
+        //finish();
     }
 
     private void populateImageView() {
