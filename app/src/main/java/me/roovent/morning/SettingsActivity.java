@@ -25,7 +25,7 @@ public class SettingsActivity extends AlarmAbstractActivity {
             /* Load the preferences from an XML resource */
             addPreferencesFromResource(R.xml.preferences);
 
-            PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, true);
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
             initSummary(getPreferenceScreen());
         }
 

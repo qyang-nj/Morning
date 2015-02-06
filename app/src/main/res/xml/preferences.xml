@@ -9,5 +9,6 @@
         android:defaultValue="5"/>
     <org.jraf.android.backport.switchwidget.SwitchPreference
         android:key="pref_vibrate"
-        android:title="@string/vibrate" />
+        android:title="@string/vibrate"
+        android:defaultValue="true"/>
 </PreferenceScreen>
