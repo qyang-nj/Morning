@@ -1,9 +1,13 @@
 package me.roovent.morning;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,13 +15,16 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.EnumSet;
+
 import me.roovent.morning.model.Alarm;
 import me.roovent.morning.model.RepeatOption;
 import me.roovent.morning.ui.AlarmSettingItem2Text;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.EnumSet;
 
 
 public class AlarmDetailActivity extends AlarmAbstractActivity {
@@ -52,7 +59,7 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
 
         final AlarmSettingItem2Text itemSound = (AlarmSettingItem2Text) findViewById(R.id.itemSound);
         final Uri u = (mAlarm.ringtone == null ? null : Uri.parse(mAlarm.ringtone));
-        itemSound.setExplanation(u == null ? getString(R.string.ringtone_none) : RingtoneManager.getRingtone(this, u).getTitle(this));
+        itemSound.setExplanation(RingtoneUtils.getRingtoneName(this, u));
         itemSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,19 +123,79 @@ public class AlarmDetailActivity extends AlarmAbstractActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_SELECT_RINGTONE) {
                 Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                Log.d(getClass().getName(), "Selected ringtone: " + uri);
                 if (uri == null) { /* Select None or Silent */
                     mAlarm.ringtone = null;
                     mSound.setExplanation(getString(R.string.ringtone_none));
                 } else {
-                    mAlarm.ringtone = uri.toString();
-                    android.media.Ringtone rt = RingtoneManager.getRingtone(this, uri);
-                    if (rt != null) {
-                        mSound.setExplanation(rt.getTitle(this));
+                    if (RingtoneUtils.isValidated(this, uri)) {
+                        mAlarm.ringtone = uri.toString();
+                        mSound.setExplanation(RingtoneUtils.getRingtoneName(this, uri));
                     } else {
-                        Toast.makeText(this, R.string.warning_invalid_ringtone, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.warning_invalid_ringtone), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
+        }
+    }
+
+    private static class RingtoneUtils {
+        static private String[] validatedExtList = {"3gp", "mp3", "ogg", "wav"};
+
+        static public boolean isValidated(Context context, Uri uri) {
+            boolean validated;
+
+            if (uri == null) {
+                validated = false;
+            } else {
+                android.media.Ringtone rt = RingtoneManager.getRingtone(context, uri);
+                if (rt == null) {
+                    if ("file".equals(uri.getScheme())) { /* file:// */
+                        String path = uri.getPath();
+                        String ext = FilenameUtils.getExtension(path);
+                        validated = Arrays.asList(validatedExtList).contains(ext);
+                    } else if ("content".equals(uri.getScheme())) { /* content:// */
+                        validated = true;
+                    } else { /* neither 'file://' nor content '://' */
+                        validated = false;
+                    }
+                } else { /* is a Ringtone */
+                    validated = true;
+                }
+            }
+
+            return validated;
+        }
+
+        static public String getRingtoneName(Context context, Uri uri) {
+            String name;
+            if (uri == null) {
+                name = context.getString(R.string.ringtone_none);
+            } else {
+                android.media.Ringtone rt = RingtoneManager.getRingtone(context, uri);
+                if (rt == null) {
+                    if ("file".equals(uri.getScheme())) { /* file:// */
+                        String path = uri.getPath();
+                        name = FilenameUtils.getBaseName(path);
+                    } else if ("content".equals(uri.getScheme())) { /* content:// */
+                        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+                        int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                        if (cursor.moveToFirst()) {
+                            name = cursor.getString(nameIndex);
+                        } else {
+                            name = "";
+                            Log.e(RingtoneUtils.class.getName(), "Get ringtone name fails: " + uri);
+                        }
+                    } else { /* neither 'file://' nor 'content://' */
+                        name = "";
+                        Log.e(RingtoneUtils.class.getName(), "Get ringtone name fails: " + uri);
+                    }
+                } else {
+                    name = rt.getTitle(context);
+                }
+            }
+
+            return name;
         }
     }
 }
