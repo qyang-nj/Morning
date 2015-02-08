@@ -21,7 +21,8 @@ public enum RepeatOption {
 
     private static final int valueOnce = 0;
     private static final int valueWeekday = getValueFromSet(EnumSet.of(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY));
-    private static final int valueWeekend = getValueFromSet(EnumSet.of(SUNDAY, SATURDAY));;
+    private static final int valueWeekend = getValueFromSet(EnumSet.of(SUNDAY, SATURDAY));
+    private static final int valueEveryday = getValueFromSet(EnumSet.allOf(RepeatOption.class));
 
     private RepeatOption(int val, int valOfCal) {
         this.value = val;
@@ -60,11 +61,13 @@ public enum RepeatOption {
 
         int value = getValueFromSet(set);
         if (value == valueOnce) {
-            str =context.getString(R.string.repeat_once);
+            str = context.getString(R.string.repeat_once);
         } else if (value == valueWeekday) {
-            str =context.getString(R.string.repeat_weekday);
+            str = context.getString(R.string.repeat_weekday);
         } else if (value == valueWeekend) {
-            str =context.getString(R.string.repeat_weekend);
+            str = context.getString(R.string.repeat_weekend);
+        } else if (value == valueEveryday) {
+            str = context.getString(R.string.repeat_everyday);
         } else {
             StringBuilder sb = new StringBuilder();
             for (RepeatOption ro : set) {

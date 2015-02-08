@@ -22,4 +22,5 @@
     <string name="repeat_once">Once</string>
     <string name="repeat_weekday">Weekdays</string>
     <string name="repeat_weekend">Weekends</string>
+    <string name="repeat_everyday">Everyday</string>
 </resources>
