@@ -8,14 +8,14 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class Ringtone implements MediaPlayer.OnPreparedListener {
-    private static final String TAG = Ringtone.class.getName();
+public class RingtonePlayer implements MediaPlayer.OnPreparedListener {
+    private static final String TAG = RingtonePlayer.class.getName();
 
     private MediaPlayer audioPlayer;
     private boolean isPrepared = false;
     private boolean isPlayed = false;
 
-    public Ringtone(Context context, Uri uri) {
+    public RingtonePlayer(Context context, Uri uri) {
         audioPlayer = new MediaPlayer();
         try {
             audioPlayer.setDataSource(context, uri);

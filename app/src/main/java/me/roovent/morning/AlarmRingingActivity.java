@@ -29,7 +29,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     private static final int RINGING_EXPIRED_TIMEOUT = 60 * 1000;
 
     private PowerManager.WakeLock mWakeLock;
-    private Ringtone mRingtone;
+    private RingtonePlayer mRingtonePlayer;
     private Alarm mAlarm;
 
     private Handler mAutoSnoozeHandler;
@@ -227,14 +227,14 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         if (mAlarm.ringtone != null) {/* not silent */
             Uri uri = Uri.parse(mAlarm.ringtone);
             /* When palying, always create a new Ringtone object */
-            mRingtone = new Ringtone(this, uri);
-            mRingtone.play();
+            mRingtonePlayer = new RingtonePlayer(this, uri);
+            mRingtonePlayer.play();
         }
     }
 
     private void stopRingtone() {
-        if (mRingtone != null) {
-            mRingtone.stop();
+        if (mRingtonePlayer != null) {
+            mRingtonePlayer.stop();
         }
     }
 }
