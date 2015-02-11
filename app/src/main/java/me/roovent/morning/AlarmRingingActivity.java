@@ -37,6 +37,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     private Vibrator mVibrator;
 
+    private boolean hasBeenStopped = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(getClass().getName(), "onCreate()");
@@ -117,7 +119,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         /* Fetch image from server */
         populateImageView();
 
-        startVibrating();
+        if (!hasBeenStopped) {
+            startVibrating();
+        }
+
         playRingtone();
     }
 
@@ -136,9 +141,6 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             getHelper().getAlarmDao().update(mAlarm);
         }
 
-        stopRingtone();
-        stopVibrating();
-
         /* Update alarm schedule */
         AlarmService.update(this);
     }
@@ -154,6 +156,15 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         /* For some reasons, when the phone is asleep and alarm starts to ring,
          * onStop() will be called before showing up, so finish() cannot be here. */
         //finish();
+        hasBeenStopped = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(getClass().getName(), "onDestroy()");
+        super.onDestroy();
+        stopRingtone();
+        stopVibrating();
     }
 
     private void populateImageView() {
@@ -224,7 +235,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     }
 
     private void playRingtone() {
-        if (mAlarm.ringtone != null) {/* not silent */
+        /* not silent && no ringtone is playing. */
+        if (mAlarm.ringtone != null && mRingtonePlayer == null) {
             Uri uri = Uri.parse(mAlarm.ringtone);
             /* When palying, always create a new Ringtone object */
             mRingtonePlayer = new RingtonePlayer(this, uri);

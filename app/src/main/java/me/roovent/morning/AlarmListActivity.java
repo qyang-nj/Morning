@@ -83,7 +83,14 @@ public class AlarmListActivity extends AlarmAbstractActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_test) {
+            List<Alarm> alarms = getHelper().getAlarmDao().queryForAll();
+
             Intent intent = new Intent(this, AlarmRingingActivity.class);
+            if (alarms.size() > 0) {
+                intent.putExtra(Alarm.KEY_ALARM_ID, alarms.get(0).id);
+            }
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             return true;
         }
