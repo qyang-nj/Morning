@@ -33,11 +33,6 @@ public class AlarmDbHelper extends OrmLiteSqliteOpenHelper {
             Log.e(AlarmDbHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
         }
-
-        Alarm a = new Alarm();
-        a.name = "Test";
-        a.enabled = false;
-        getAlarmDao().create(a);
     }
 
     @Override
