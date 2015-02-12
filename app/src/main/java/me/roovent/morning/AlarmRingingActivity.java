@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -26,25 +27,35 @@ import me.roovent.morning.model.AlarmDbHelper;
 
 
 public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
+    private static final String TAG = AlarmRingingActivity.class.getName();
     private static final int RINGING_EXPIRED_TIMEOUT = 60 * 1000;
 
     private PowerManager.WakeLock mWakeLock;
     private RingtonePlayer mRingtonePlayer;
     private Alarm mAlarm;
 
-    private Handler mAutoSnoozeHandler;
-    private Runnable mAutoSnoozeCallback;
-
     private Vibrator mVibrator;
     private RingingNotification mRingingNotification;
 
-    private boolean hasBeenStopped = false;
+    private TextView tvTime;
+    private TextView tvName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(getClass().getName(), "onCreate()");
+        Log.v(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ringing);
+
+        /* Wire up */
+        tvTime = (TextView) findViewById(R.id.txt_time);
+        tvName = (TextView) findViewById(R.id.txt_name);
+
+        findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         /* Hide status bar and navigation(home & back) */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -57,57 +68,18 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         }
 
         wakeupScreen();
-    }
+        populateImageView();
+        startVibrating();
 
-    @Override
-    protected void onResume() {
-        Log.d(getClass().getName(), "onResume()");
-        super.onResume();
-
-        /* Fetch alarm from db
-         *
-         * Because two alarms may ring at the same time (one of them is snoozed),
-         * onResume() can be invoked twice for different alarms. Hence, fetching alarm
-         * from db should be in onResume() instead of onCreate().
-         */
+        /* Fetch alarm from db */
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
         mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
         if (mAlarm == null) {
-            Log.e(getClass().getName(), "Alarm wasn't found in database. Check why.");
+            Log.e(TAG, "Alarm wasn't found in database. Check why.");
             mAlarm = new Alarm(); /* Just for safety. */
         }
 
-        /* Set TextView: time */
-        TextView txtTime = (TextView) findViewById(R.id.txt_time);
-        Calendar cal = Calendar.getInstance();
-        txtTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
-
-        /* Set TextView: name */
-        TextView txtName = (TextView) findViewById(R.id.txt_name);
-        if (mAlarm.name == null || mAlarm.name.isEmpty()) {
-            txtName.setVisibility(View.GONE);
-        } else {
-            txtName.setVisibility(View.VISIBLE);
-            txtName.setText(mAlarm.name);
-        }
-
-        /* Set auto snooze */
-        mAutoSnoozeCallback = new Runnable() {
-            @Override
-            public void run() {
-                AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
-                finish();
-            }
-        };
-        mAutoSnoozeHandler = new Handler();
-        mAutoSnoozeHandler.postDelayed(mAutoSnoozeCallback, RINGING_EXPIRED_TIMEOUT);
-
-        findViewById(R.id.btn_dismiss).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        updateAlarm(mAlarm);
 
         findViewById(R.id.btn_snooze).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,25 +88,29 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
                 finish();
             }
         });
+    }
 
-        /* Fetch image from server */
-        populateImageView();
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume()");
+        super.onResume();
 
-        if (!hasBeenStopped) {
-            startVibrating();
+        /* Set TextView: time */
+        Calendar cal = Calendar.getInstance();
+        tvTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
+
+        int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
+        if (alarmId != -1 && alarmId != mAlarm.id) {
+            mAlarm = getHelper().getAlarmDao().queryForId(alarmId);
+            Log.v(TAG, "new alarm comes: " + mAlarm.toString());
+            updateAlarm(mAlarm);
         }
-
-        playRingtone();
     }
 
     @Override
     protected void onPause() {
-        Log.d(getClass().getName(), "onPause()");
+        Log.v(TAG, "onPause()");
         super.onPause();
-
-        if (mAutoSnoozeHandler != null) {
-            mAutoSnoozeHandler.removeCallbacks(mAutoSnoozeCallback);
-        }
 
         /* Saving data should be in onPause(), because other activity's onResume() may use this data. */
         if (mAlarm.repeat == 0) {
@@ -149,9 +125,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     /* The activity is no longer visible */
     @Override
     protected void onStop() {
-        Log.d(getClass().getName(), "onStop()");
+        Log.v(TAG, "onStop()");
         super.onStop();
 
+        /* Send notification to allow user to dismiss the alarm later on. */
         mRingingNotification = new RingingNotification(this);
         mRingingNotification.send();
 
@@ -160,19 +137,31 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         /* For some reasons, when the phone is asleep and alarm starts to ring,
          * onStop() will be called before showing up, so finish() cannot be here. */
         //finish();
-        hasBeenStopped = true;
     }
 
     @Override
     protected void onDestroy() {
-        Log.d(getClass().getName(), "onDestroy()");
+        Log.v(TAG, "onDestroy()");
         super.onDestroy();
+
         stopRingtone();
         stopVibrating();
 
         if (mRingingNotification != null) {
             mRingingNotification.cancel();
         }
+    }
+
+    private void updateAlarm(Alarm alarm) {
+        if (TextUtils.isEmpty(alarm.name)) {
+            tvName.setVisibility(View.GONE);
+        } else {
+            tvName.setVisibility(View.VISIBLE);
+            tvName.setText(mAlarm.name);
+        }
+
+        stopRingtone();
+        playRingtone(alarm);
     }
 
     private void populateImageView() {
@@ -242,10 +231,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         }
     }
 
-    private void playRingtone() {
+    private void playRingtone(Alarm alarm) {
         /* not silent && no ringtone is playing. */
-        if (mAlarm.ringtone != null && mRingtonePlayer == null) {
-            Uri uri = Uri.parse(mAlarm.ringtone);
+        if (alarm.ringtone != null && mRingtonePlayer == null) {
+            Uri uri = Uri.parse(alarm.ringtone);
             /* When palying, always create a new Ringtone object */
             mRingtonePlayer = new RingtonePlayer(this, uri);
             mRingtonePlayer.play();
