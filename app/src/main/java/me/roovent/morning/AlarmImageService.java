@@ -28,8 +28,8 @@ public class AlarmImageService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         try {
             /* Retrieve the image url */
-            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(AlarmRingingImage.BASE_URL).build();
-            AlarmRingingImage.ImageGetter image = restAdapter.create(AlarmRingingImage.ImageGetter.class);
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(RingingImage.BASE_URL).build();
+            RingingImage.ImageGetter image = restAdapter.create(RingingImage.ImageGetter.class);
             String imageUrl = image.getImageUrl().url;
 
             /* Cache the image */
