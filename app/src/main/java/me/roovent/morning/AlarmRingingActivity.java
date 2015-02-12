@@ -36,6 +36,7 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     private Runnable mAutoSnoozeCallback;
 
     private Vibrator mVibrator;
+    private RingingNotification mRingingNotification;
 
     private boolean hasBeenStopped = false;
 
@@ -151,6 +152,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         Log.d(getClass().getName(), "onStop()");
         super.onStop();
 
+        mRingingNotification = new RingingNotification(this);
+        mRingingNotification.send();
+
         releaseScreen();
 
         /* For some reasons, when the phone is asleep and alarm starts to ring,
@@ -165,6 +169,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         super.onDestroy();
         stopRingtone();
         stopVibrating();
+
+        if (mRingingNotification != null) {
+            mRingingNotification.cancel();
+        }
     }
 
     private void populateImageView() {

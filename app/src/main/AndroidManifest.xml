@@ -33,7 +33,11 @@
         <activity
             android:name=".AlarmRingingActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="me.roovent.morning.TO_FRONT" />
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".AlarmSetter">
             <intent-filter>
