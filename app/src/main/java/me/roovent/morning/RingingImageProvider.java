@@ -85,6 +85,7 @@ public class RingingImageProvider {
 
                 } catch (RetrofitError e) {
                     Log.e(TAG, String.format("Type: %s; Message: %s", e.getKind(), e.getMessage()));
+                    NetworkChangeReceiver.enable(mContext);
                 } catch (IOException e) {
                     Log.e(TAG, e.getMessage());
                 }
