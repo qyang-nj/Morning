@@ -48,7 +48,6 @@
         <receiver android:name=".AlarmReceiver" />
 
         <service android:name=".AlarmService" />
-        <service android:name=".AlarmImageService" />
     </application>
 
 </manifest>
