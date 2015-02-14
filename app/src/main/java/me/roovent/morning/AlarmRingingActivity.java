@@ -167,7 +167,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
 
     private void populateImageView() {
         Bitmap bitmap = new RingingImageProvider(this).getImage();
-        ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
+        if (bitmap != null) {
+            ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
+        }
     }
 
     private void startVibrating() {
