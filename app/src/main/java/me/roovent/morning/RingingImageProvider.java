@@ -24,6 +24,7 @@ import retrofit.RetrofitError;
  */
 public class RingingImageProvider {
     private static final String TAG = RingingImageProvider.class.getName();
+    private static final int MAX_DOWNLOADED_FILE = 5;
 
     private Context mContext;
 
@@ -32,10 +33,11 @@ public class RingingImageProvider {
     }
 
     public void init() {
-        /* download three images */
-        downloadImage();
-        downloadImage();
-        downloadImage();
+        int numDownloadedFile = mContext.fileList().length;
+
+        for (int i = 0; i < MAX_DOWNLOADED_FILE - numDownloadedFile; ++i) {
+            downloadImage();
+        }
     }
 
     public Bitmap getImage() {
