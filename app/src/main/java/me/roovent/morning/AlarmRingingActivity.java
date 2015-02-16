@@ -2,6 +2,7 @@ package me.roovent.morning;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -165,11 +166,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
     }
 
     private void populateImageView() {
-        String imageUrl = getSharedPreferences(AlarmImageService.PREFERENCE_IMAGE_URL, Context.MODE_MULTI_PROCESS)
-                .getString(AlarmImageService.PREFERENCE_IMAGE_URL, null);
-        if (imageUrl != null) {
-            Picasso.with(AlarmRingingActivity.this).load(imageUrl)
-                    .placeholder(R.drawable.logo).into((ImageView) findViewById(R.id.image));
+        Bitmap bitmap = new RingingImageProvider(this).getImage();
+        if (bitmap != null) {
+            ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
     }
 

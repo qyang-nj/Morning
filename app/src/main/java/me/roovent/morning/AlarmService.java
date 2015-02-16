@@ -97,18 +97,12 @@ public class AlarmService extends IntentService {
         PendingIntent piForRingAlarm = PendingIntent.getBroadcast(this, requestCode,
                 intentForRingAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentForDownloadImage = new Intent(this, AlarmImageService.class);
-        PendingIntent piForDownloadImage = PendingIntent.getService(this, requestCode,
-                intentForDownloadImage, PendingIntent.FLAG_UPDATE_CURRENT);
-
         if (time == Long.MAX_VALUE || CANCEL.equals(action)) { /* Cancel alarm */
             am.cancel(piForRingAlarm);
-            am.cancel(piForDownloadImage);
             Log.i(getClass().getName(), time == Long.MAX_VALUE ?
                     "[ No scheduled alarm ]" : "[ Alarm canceled ] " + alarm.toString());
         } else if (CREATE.equals(action)) {
             setAlarm(am, piForRingAlarm, time);
-            setAlarm(am, piForDownloadImage, time - 60 * 1000);
             Log.i(getClass().getName(), String.format("[ Alarm scheduled ] [%s] [%s] [Snoozed: %s]",
                     alarm.toString(), SimpleDateFormat.getDateTimeInstance().format(new Date(time)), isSnoozed));
         }

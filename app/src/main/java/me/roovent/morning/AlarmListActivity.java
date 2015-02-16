@@ -24,8 +24,6 @@ public class AlarmListActivity extends AlarmAbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(getClass().getName(), "SDK Version: " + android.os.Build.VERSION.SDK_INT);
-
         setContentView(R.layout.activity_alarm_list);
 
         mList = (GridView) findViewById(R.id.grid);
