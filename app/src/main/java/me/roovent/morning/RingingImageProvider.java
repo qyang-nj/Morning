@@ -25,6 +25,7 @@ import retrofit.RetrofitError;
 public class RingingImageProvider {
     private static final String TAG = RingingImageProvider.class.getName();
     private static final int MAX_DOWNLOADED_FILE = 5;
+    private static boolean hasInitialized = false;
 
     private Context mContext;
 
@@ -32,11 +33,14 @@ public class RingingImageProvider {
         mContext = context;
     }
 
-    public void init() {
-        int numDownloadedFile = mContext.fileList().length;
+    public synchronized void init() {
+        if (!hasInitialized) {
+            hasInitialized = true;
+            int numDownloadedFile = mContext.fileList().length;
 
-        for (int i = 0; i < MAX_DOWNLOADED_FILE - numDownloadedFile; ++i) {
-            downloadImage();
+            for (int i = 0; i < MAX_DOWNLOADED_FILE - numDownloadedFile; ++i) {
+                downloadImage();
+            }
         }
     }
 
@@ -84,7 +88,9 @@ public class RingingImageProvider {
                     mFilename = FilenameUtils.getBaseName(imageUrl);
 
                 } catch (RetrofitError e) {
+                    /* Fail to download image */
                     Log.e(TAG, String.format("Type: %s; Message: %s", e.getKind(), e.getMessage()));
+                    hasInitialized = false;
                     NetworkChangeReceiver.enable(mContext);
                 } catch (IOException e) {
                     Log.e(TAG, e.getMessage());
