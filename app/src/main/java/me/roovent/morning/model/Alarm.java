@@ -17,6 +17,7 @@ import java.util.List;
 @DatabaseTable(tableName = "alarm")
 public class Alarm {
     public static final String KEY_ALARM_ID = "KEY_ALARM_ID";
+    public static final String KEY_IS_SNOOZED = "isSnoozed";
 
     @DatabaseField(generatedId = true)
     public int id;

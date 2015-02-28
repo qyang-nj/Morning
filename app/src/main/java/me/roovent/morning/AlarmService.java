@@ -2,6 +2,7 @@ package me.roovent.morning;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,21 +14,20 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import me.roovent.morning.model.Alarm;
-import me.roovent.morning.model.AlarmDbHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.AlarmDbHelper;
+
 /**
  * Created by Qing Yang on 1/26/15.
  */
 public class AlarmService extends IntentService {
-    public static final String CREATE = "CREATE";
-    public static final String CANCEL = "CANCEL";
-
-    private static final String KEY_IS_SNOOZED = "isSnoozed";
+    public static final String CREATE = "me.roovent.morning.ALARM_CREATE";
+    public static final String CANCEL = "me.roovent.morning.ALARM_CANCEL";
 
     private IntentFilter matcher;
     private AlarmDbHelper databaseHelper = null;
@@ -60,7 +60,7 @@ public class AlarmService extends IntentService {
         Intent i = new Intent(context, AlarmService.class);
         i.setAction(AlarmService.CREATE);
         i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
-        i.putExtra(KEY_IS_SNOOZED, snoozed);
+        i.putExtra(Alarm.KEY_IS_SNOOZED, snoozed);
         context.startService(i);
     }
 
@@ -88,7 +88,7 @@ public class AlarmService extends IntentService {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Alarm alarm = getHelper().getAlarmDao().queryForId(alarmId);
 
-        boolean isSnoozed = intent.getBooleanExtra(KEY_IS_SNOOZED, false);
+        boolean isSnoozed = intent.getBooleanExtra(Alarm.KEY_IS_SNOOZED, false);
         int requestCode = isSnoozed ? alarmId + 1 : 0;
         long time = isSnoozed ? getSnoozeTime() : alarm.getNextTime();
 
@@ -99,6 +99,11 @@ public class AlarmService extends IntentService {
 
         if (time == Long.MAX_VALUE || CANCEL.equals(action)) { /* Cancel alarm */
             am.cancel(piForRingAlarm);
+
+            /* Cancel snoozed notification if there is */
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+                    .cancel(SnoozedNotification.getNotificationId(alarmId));
+
             Log.i(getClass().getName(), time == Long.MAX_VALUE ?
                     "[ No scheduled alarm ]" : "[ Alarm canceled ] " + alarm.toString());
         } else if (CREATE.equals(action)) {
@@ -124,21 +129,9 @@ public class AlarmService extends IntentService {
         return databaseHelper;
     }
 
-    /* Get snooze duration from shared preferences */
-    private int getSnoozeDuration() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        int duration = 5;
-        try {
-            duration = Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
-        } catch (NumberFormatException e) {
-            Log.e(getClass().getName(), e.getMessage());
-            duration = 5;
-        }
-        return duration;
-    }
-
-    private long getSnoozeTime() {
-        return (new Date().getTime()) / 1000 * 1000 + getSnoozeDuration() * 60 * 1000;
+    public long getSnoozeTime() {
+        int snoozeDuration = new Preference(this).getSnoozeDuration();
+        return (new Date().getTime()) / 1000 * 1000 + snoozeDuration * 60 * 1000;
     }
 
     private void setAlarm(AlarmManager am, PendingIntent pi, long time) {

@@ -1,5 +1,6 @@
 package me.roovent.morning;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -19,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
@@ -86,6 +86,8 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             @Override
             public void onClick(View view) {
                 AlarmService.snoozeAlarm(AlarmRingingActivity.this, mAlarm);
+                /* Send a notification to allow user to cancel snoozed alarms */
+                new SnoozedNotification(AlarmRingingActivity.this, mAlarm).send();
                 finish();
             }
         });
@@ -96,8 +98,9 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
         Log.v(TAG, "onResume()");
         super.onResume();
 
-        /* Set TextView: time */
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, mAlarm.hour);
+        cal.set(Calendar.MINUTE, mAlarm.minute);
         tvTime.setText(DateFormat.format("hh:mm a", cal.getTime()));
 
         int alarmId = getIntent().getIntExtra(Alarm.KEY_ALARM_ID, -1);
@@ -106,6 +109,10 @@ public class AlarmRingingActivity extends OrmLiteBaseActivity<AlarmDbHelper> {
             Log.v(TAG, "new alarm comes: " + mAlarm.toString());
             updateAlarm(mAlarm);
         }
+
+        /* Cancel snoozed notification if there is */
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+                .cancel(SnoozedNotification.getNotificationId(alarmId));
     }
 
     @Override
