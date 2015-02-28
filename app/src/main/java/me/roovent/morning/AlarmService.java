@@ -26,10 +26,8 @@ import me.roovent.morning.model.AlarmDbHelper;
  * Created by Qing Yang on 1/26/15.
  */
 public class AlarmService extends IntentService {
-    public static final String CREATE = "CREATE";
-    public static final String CANCEL = "CANCEL";
-
-    public static final String KEY_IS_SNOOZED = "isSnoozed";
+    public static final String CREATE = "me.roovent.morning.ALARM_CREATE";
+    public static final String CANCEL = "me.roovent.morning.ALARM_CANCEL";
 
     private IntentFilter matcher;
     private AlarmDbHelper databaseHelper = null;
@@ -62,7 +60,7 @@ public class AlarmService extends IntentService {
         Intent i = new Intent(context, AlarmService.class);
         i.setAction(AlarmService.CREATE);
         i.putExtra(Alarm.KEY_ALARM_ID, alarm.id);
-        i.putExtra(KEY_IS_SNOOZED, snoozed);
+        i.putExtra(Alarm.KEY_IS_SNOOZED, snoozed);
         context.startService(i);
     }
 
@@ -90,7 +88,7 @@ public class AlarmService extends IntentService {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Alarm alarm = getHelper().getAlarmDao().queryForId(alarmId);
 
-        boolean isSnoozed = intent.getBooleanExtra(KEY_IS_SNOOZED, false);
+        boolean isSnoozed = intent.getBooleanExtra(Alarm.KEY_IS_SNOOZED, false);
         int requestCode = isSnoozed ? alarmId + 1 : 0;
         long time = isSnoozed ? getSnoozeTime() : alarm.getNextTime();
 
@@ -131,21 +129,9 @@ public class AlarmService extends IntentService {
         return databaseHelper;
     }
 
-    /* Get snooze duration from shared preferences */
-    private int getSnoozeDuration() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        int duration = 5;
-        try {
-            duration = Integer.parseInt(sharedPref.getString("pref_snooze_duration", "5"));
-        } catch (NumberFormatException e) {
-            Log.e(getClass().getName(), e.getMessage());
-            duration = 5;
-        }
-        return duration;
-    }
-
     public long getSnoozeTime() {
-        return (new Date().getTime()) / 1000 * 1000 + getSnoozeDuration() * 60 * 1000;
+        int snoozeDuration = new Preference(this).getSnoozeDuration();
+        return (new Date().getTime()) / 1000 * 1000 + snoozeDuration * 60 * 1000;
     }
 
     private void setAlarm(AlarmManager am, PendingIntent pi, long time) {

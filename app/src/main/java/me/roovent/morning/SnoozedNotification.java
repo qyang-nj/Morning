@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.text.format.DateFormat;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import me.roovent.morning.model.Alarm;
@@ -28,22 +29,26 @@ public class SnoozedNotification {
     public SnoozedNotification(Context context, Alarm alarm) {
         mContext = context;
         mAlarm = alarm;
-        mNotificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) mContext
+                .getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public void send() {
         Intent intent = new Intent(mContext, AlarmService.class);
         intent.setAction(AlarmService.CANCEL);
         intent.putExtra(Alarm.KEY_ALARM_ID, mAlarm.id);
-        intent.putExtra(AlarmService.KEY_IS_SNOOZED, true);
+        intent.putExtra(Alarm.KEY_IS_SNOOZED, true);
         PendingIntent notifyIntent = PendingIntent.getService(mContext, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calc = Calendar.getInstance();
+        calc.add(Calendar.MINUTE, new Preference(mContext).getSnoozeDuration());
 
         Notification.Builder builder = new Notification.Builder(mContext)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(mContext.getString(R.string.notification_title_snoozed))
-                .setContentText("A snoozed alarm is about to ring at " + DateFormat.format("hh:mm a", new Date()))
+                .setContentText(String.format(mContext.getString(R.string.notification_content_snoozed),
+                        DateFormat.format("hh:mm a", calc.getTime())))
                 .setOngoing(true);
 
         Notification notification;
