@@ -15,6 +15,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="prompt_alarm_created">Alarm created!</string>
     <string name="notification_title">Alarm is ringing</string>
+    <string name="notification_title_snoozed">Snoozed Alarm</string>
     <string name="notification_content">Click to dismiss</string>
     <string name="warning_invalid_ringtone">Please select a valid music file.</string>
     <string name="ringtone_none">None</string>

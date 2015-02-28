@@ -2,6 +2,7 @@ package me.roovent.morning;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +14,13 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import me.roovent.morning.model.Alarm;
-import me.roovent.morning.model.AlarmDbHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import me.roovent.morning.model.Alarm;
+import me.roovent.morning.model.AlarmDbHelper;
 
 /**
  * Created by Qing Yang on 1/26/15.
@@ -27,7 +29,7 @@ public class AlarmService extends IntentService {
     public static final String CREATE = "CREATE";
     public static final String CANCEL = "CANCEL";
 
-    private static final String KEY_IS_SNOOZED = "isSnoozed";
+    public static final String KEY_IS_SNOOZED = "isSnoozed";
 
     private IntentFilter matcher;
     private AlarmDbHelper databaseHelper = null;
@@ -99,6 +101,11 @@ public class AlarmService extends IntentService {
 
         if (time == Long.MAX_VALUE || CANCEL.equals(action)) { /* Cancel alarm */
             am.cancel(piForRingAlarm);
+
+            /* Cancel snoozed notification if there is */
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+                    .cancel(SnoozedNotification.getNotificationId(alarmId));
+
             Log.i(getClass().getName(), time == Long.MAX_VALUE ?
                     "[ No scheduled alarm ]" : "[ Alarm canceled ] " + alarm.toString());
         } else if (CREATE.equals(action)) {
@@ -137,7 +144,7 @@ public class AlarmService extends IntentService {
         return duration;
     }
 
-    private long getSnoozeTime() {
+    public long getSnoozeTime() {
         return (new Date().getTime()) / 1000 * 1000 + getSnoozeDuration() * 60 * 1000;
     }
 
